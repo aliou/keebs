@@ -1,36 +1,61 @@
 {
     "manufacturer": "NEO",
-    "keyboard_name": "NEO65 Wired For Trimode ",
-    "maintainer": "JonyLee@HFD",
-    "url": "https://github.com/aliou/keebs",
+    "keyboard_name": "NEO65",
+    "maintainer": "emolitor@github",
+    "url": "https://www.qwertykeys.com/products/neo65-1",
     "processor": "WB32FQ95",
     "bootloader": "wb32-dfu",
     "usb": {
-        "device_version": "1.0.0",
+        "device_version": "0.0.1",
         "vid": "0xFFFE",
         "pid": "0x0015",
-        "force_nkro": true,
-        "suspend_wakeup_delay": 1000
+        "suspend_wakeup_delay": 1000,
+        "no_startup_check": true
     },
     "diode_direction": "ROW2COL",
+    "eeprom": {
+        "driver": "wear_leveling",
+        "wear_leveling": {
+            "backing_size": 8192,
+            "driver": "spi_flash"
+        }
+    },
+    "host": {
+        "default": {
+            "nkro": true
+        }
+    },
     "features": {
         "bootmagic": true,
         "command": false,
         "console": false,
+        "deferred_exec": true,
         "extrakey": true,
         "mousekey": true,
         "nkro": true,
-        "haptic": false
+        "macros": true
     },
+    "tapping": {
+        "term_per_key": true
+    },
+    "keycodes": [
+        { "key": "KC_USB" },
+        { "key": "KC_BT1" },
+        { "key": "KC_BT2" },
+        { "key": "KC_BT3" },
+        { "key": "KC_2G4" },
+        { "key": "KC_NXT" }
+    ],
     "matrix_pins": {
         "cols": ["C1", "C2", "C3", "A0", "A1", "A2", "A3", "A4", "A5", "A6", "A7", "C4", "C5", "B0", "B1", "B2"],
         "rows": ["C6", "C7", "C8", "C9", "B14"]
     },
     "indicators": {
-        "caps_lock": "A8"
+        "caps_lock": "A8",
+        "on_state": 0
     },
     "layouts": {
-        "LAYOUT_ansi": {
+        "LAYOUT": {
             "layout": [
                 { "matrix": [0,0], "x": 0, "y": 0 },
                 { "matrix": [0,1], "x": 1, "y": 0 },

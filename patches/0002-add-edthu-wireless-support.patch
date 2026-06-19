@@ -1,0 +1,2663 @@
+diff --git a/keyboards/neo/neo65_trimode/config.h b/keyboards/neo/neo65_trimode/config.h
+new file mode 100644
+index 0000000..07acb06
+--- /dev/null
++++ b/keyboards/neo/neo65_trimode/config.h
+@@ -0,0 +1,50 @@
++// Copyright 2025 emolitor (github.com/emolitor)
++// SPDX-License-Identifier: GPL-2.0-or-later
++
++#pragma once
++
++/*
++ * Specific tapping term for wireless configuration. If the key is held for
++ * less than 3 seconds we select that device for the active connection. If
++ * greater than 3 seconds we select that device and go into pairing mode.
++ */
++#define WIRELESS_TAPPING_TERM 3000
++
++/* LEDS */
++#define LED_BLINK_FAST_PERIOD_MS 300
++
++
++/* KEYS */
++#define ESCAPE_PIN      D2
++#define DEVS_BT1_PIN    C11
++#define DEVS_BT2_PIN    C10
++#define DEVS_BT3_PIN    A15
++#define DEVS_2G4_PIN    C0
++
++/* FLASH */
++#define SPI_DRIVER SPIDQ
++#define SPI_SCK_PIN B3
++#define SPI_MOSI_PIN B5
++#define SPI_MISO_PIN B4
++#define SPI_MOSI_PAL_MODE 5
++#define EXTERNAL_FLASH_SPI_SLAVE_SELECT_PIN C12
++
++/* POWER */
++#define USB_POWER_EN_PIN A14
++//#define LED_POWER_EN_PIN B13
++#define BT_CABLE_PIN B8 // High when charging
++#define BT_CHARGE_PIN B9 // Low when charging, high when fully charged
++
++/* UART */
++#define UART_TX_PIN A9
++#define UART_TX_PAL_MODE 7
++#define UART_RX_PIN A10
++#define UART_RX_PAL_MODE 7
++
++#define LED_PIN_ON_STATE 0
++
++/* WIRELESS NAMES */
++#define MD_BT_NAME "NEO65 BT$"
++
++#define LPWR_TIMEOUT 120000
++#define WLS_KEYBOARD_REPORT_KEYS 5
+diff --git a/keyboards/neo/neo65_trimode/halconf.h b/keyboards/neo/neo65_trimode/halconf.h
+new file mode 100644
+index 0000000..38c22d2
+--- /dev/null
++++ b/keyboards/neo/neo65_trimode/halconf.h
+@@ -0,0 +1,5 @@
++#pragma once
++
++#define PAL_USE_CALLBACKS TRUE
++
++#include_next <halconf.h>
+diff --git a/keyboards/neo/neo65_trimode/keyboard.json b/keyboards/neo/neo65_trimode/keyboard.json
+new file mode 100644
+index 0000000..cf7324b
+--- /dev/null
++++ b/keyboards/neo/neo65_trimode/keyboard.json
+@@ -0,0 +1,137 @@
++{
++    "manufacturer": "NEO",
++    "keyboard_name": "NEO65",
++    "maintainer": "emolitor@github",
++    "url": "https://www.qwertykeys.com/products/neo65-1",
++    "processor": "WB32FQ95",
++    "bootloader": "wb32-dfu",
++    "usb": {
++        "device_version": "0.0.1",
++        "vid": "0xFFFE",
++        "pid": "0x0015",
++        "suspend_wakeup_delay": 1000,
++        "no_startup_check": true
++    },
++    "diode_direction": "ROW2COL",
++    "eeprom": {
++        "driver": "wear_leveling",
++        "wear_leveling": {
++            "backing_size": 8192,
++            "driver": "spi_flash"
++        }
++    },
++    "host": {
++        "default": {
++            "nkro": true
++        }
++    },
++    "features": {
++        "bootmagic": true,
++        "command": false,
++        "console": false,
++        "deferred_exec": true,
++        "extrakey": true,
++        "mousekey": true,
++        "nkro": true,
++        "macros": true
++    },
++    "tapping": {
++        "term_per_key": true
++    },
++    "keycodes": [
++        { "key": "KC_USB" },
++        { "key": "KC_BT1" },
++        { "key": "KC_BT2" },
++        { "key": "KC_BT3" },
++        { "key": "KC_2G4" },
++        { "key": "KC_NXT" }
++    ],
++    "matrix_pins": {
++        "cols": ["C1", "C2", "C3", "A0", "A1", "A2", "A3", "A4", "A5", "A6", "A7", "C4", "C5", "B0", "B1", "B2"],
++        "rows": ["C6", "C7", "C8", "C9", "B14"]
++    },
++    "indicators": {
++        "caps_lock": "A8",
++        "on_state": 0
++    },
++    "layouts": {
++        "LAYOUT": {
++            "layout": [
++                { "matrix": [0,0], "x": 0, "y": 0 },
++                { "matrix": [0,1], "x": 1, "y": 0 },
++                { "matrix": [0,2], "x": 2, "y": 0 },
++                { "matrix": [0,3], "x": 3, "y": 0 },
++                { "matrix": [0,4], "x": 4, "y": 0 },
++                { "matrix": [0,5], "x": 5, "y": 0 },
++                { "matrix": [0,6], "x": 6, "y": 0 },
++                { "matrix": [0,7], "x": 7, "y": 0 },
++                { "matrix": [0,8], "x": 8, "y": 0 },
++                { "matrix": [0,9], "x": 9, "y": 0 },
++                { "matrix": [0,10], "x": 10, "y": 0 },
++                { "matrix": [0,11], "x": 11, "y": 0 },
++                { "matrix": [0,12], "x": 12, "y": 0 },
++                { "matrix": [3,12], "x": 13, "y": 0 },
++                { "matrix": [0,13], "w": 2, "x": 13, "y": 0 },
++                { "matrix": [0,15], "x": 15, "y": 0 },
++
++                { "matrix": [1,0], "w": 1.5, "x": 0, "y": 1 },
++                { "matrix": [1,1], "x": 1.5, "y": 1 },
++                { "matrix": [1,2], "x": 2.5, "y": 1 },
++                { "matrix": [1,3], "x": 3.5, "y": 1 },
++                { "matrix": [1,4], "x": 4.5, "y": 1 },
++                { "matrix": [1,5], "x": 5.5, "y": 1 },
++                { "matrix": [1,6], "x": 6.5, "y": 1 },
++                { "matrix": [1,7], "x": 7.5, "y": 1 },
++                { "matrix": [1,8], "x": 8.5, "y": 1 },
++                { "matrix": [1,9], "x": 9.5, "y": 1 },
++                { "matrix": [1,10], "x": 10.5, "y": 1 },
++                { "matrix": [1,11], "x": 11.5, "y": 1 },
++                { "matrix": [1,12], "x": 12.5, "y": 1 },
++                { "matrix": [1,13], "w": 1.5, "x": 13.5, "y": 1 },
++                { "matrix": [1,15], "x": 15, "y": 1 },
++
++                { "matrix": [2,0], "w": 1.75, "x": 0, "y": 2 },
++                { "matrix": [2,1], "x": 1.75, "y": 2 },
++                { "matrix": [2,2], "x": 2.75, "y": 2 },
++                { "matrix": [2,3], "x": 3.75, "y": 2 },
++                { "matrix": [2,4], "x": 4.75, "y": 2 },
++                { "matrix": [2,5], "x": 5.75, "y": 2 },
++                { "matrix": [2,6], "x": 6.75, "y": 2 },
++                { "matrix": [2,7], "x": 7.75, "y": 2 },
++                { "matrix": [2,8], "x": 8.75, "y": 2 },
++                { "matrix": [2,9],  "x": 9.75, "y": 2 },
++                { "matrix": [2,10], "x": 10.75, "y": 2 },
++                { "matrix": [2,11], "x": 11.75, "y": 2 },
++                { "matrix": [2,12], "x": 12.75, "y": 2 },
++                { "matrix": [2,13], "w": 2.25, "x": 12.75, "y": 2 },
++                { "matrix": [2,15], "x": 15, "y": 2 },
++
++                { "matrix": [3,0], "w": 2.25, "x": 0, "y": 3 },
++                { "matrix": [3,1], "x": 1.25, "y": 3 },
++                { "matrix": [3,2], "x": 2.25, "y": 3 },
++                { "matrix": [3,3], "x": 3.25, "y": 3 },
++                { "matrix": [3,4], "x": 4.25, "y": 3 },
++                { "matrix": [3,5], "x": 5.25, "y": 3 },
++                { "matrix": [3,6], "x": 6.25, "y": 3 },
++                { "matrix": [3,7], "x": 7.25, "y": 3 },
++                { "matrix": [3,8], "x": 8.25, "y": 3 },
++                { "matrix": [3,9],  "x": 9.25, "y": 3 },
++                { "matrix": [3,10], "x": 10.25, "y": 3 },
++                { "matrix": [3,11], "x": 11.25, "y": 3 },
++                { "matrix": [3,13], "w": 1.75, "x": 12.25, "y": 3 },
++                { "matrix": [3,14], "x": 14, "y": 3 },
++                { "matrix": [3,15], "x": 15, "y": 3 },
++
++                { "matrix": [4,0], "w": 1.25, "x": 0, "y": 4 },
++                { "matrix": [4,1], "w": 1.25, "x": 1.25, "y": 4 },
++                { "matrix": [4,2], "w": 1.25, "x": 2.5, "y": 4 },
++                { "matrix": [4,6], "w": 6.25, "x": 3.75, "y": 4 },
++                { "matrix": [4,9], "w": 1.25, "x": 10, "y": 4 },
++                { "matrix": [4,10], "w": 1.25, "x": 11.25, "y": 4 },
++                { "matrix": [4,13], "x": 13, "y": 4 },
++                { "matrix": [4,14], "x": 14, "y": 4 },
++                { "matrix": [4,15], "x": 15, "y": 4 }
++            ]
++        }
++    }
++}
+diff --git a/keyboards/neo/neo65_trimode/keymaps/default/keymap.c b/keyboards/neo/neo65_trimode/keymaps/default/keymap.c
+new file mode 100644
+index 0000000..f7f37e9
+--- /dev/null
++++ b/keyboards/neo/neo65_trimode/keymaps/default/keymap.c
+@@ -0,0 +1,47 @@
++// Copyright 2025 emolitor (@github.com/emolitor)
++// Copyright 2023 JoyLee (@itarze)
++// SPDX-License-Identifier: GPL-2.0-or-later
++
++#include QMK_KEYBOARD_H
++
++enum layers {
++    WIN_BASE,
++    WIN_FN,
++    MAC_BASE,
++    MAC_FN,
++};
++
++// clang-format off
++const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
++    [WIN_BASE] = LAYOUT(
++        KC_ESC,  KC_1,    KC_2,    KC_3,    KC_4,    KC_5,    KC_6,    KC_7,    KC_8,    KC_9,    KC_0,    KC_MINS, KC_EQL,  KC_BSLS, KC_BSPC, KC_DEL,
++        KC_TAB,  KC_Q,    KC_W,    KC_E,    KC_R,    KC_T,    KC_Y,    KC_U,    KC_I,    KC_O,    KC_P,    KC_LBRC, KC_RBRC, KC_BSLS,          KC_PGUP,
++        KC_CAPS, KC_A,    KC_S,    KC_D,    KC_F,    KC_G,    KC_H,    KC_J,    KC_K,    KC_L,    KC_SCLN, KC_QUOT, KC_NUHS, KC_ENT,           KC_PGDN,
++        KC_LSFT, KC_NUBS, KC_Z,    KC_X,    KC_C,    KC_V,    KC_B,    KC_N,    KC_M,    KC_COMM, KC_DOT,  KC_SLSH,          KC_RSFT, KC_UP,   KC_END,
++        KC_LCTL, KC_LGUI, KC_LALT,                            KC_SPC,                             KC_RALT, MO(WIN_FN),       KC_LEFT, KC_DOWN, KC_RGHT
++    ),
++
++    [WIN_FN] = LAYOUT(
++        KC_USB, KC_F1,   KC_F2,   KC_F3,   KC_F4,   KC_F5,   KC_F6,   KC_F7,   KC_F8,   KC_F9,   KC_F10,  KC_F11,  KC_F12,  _______, _______, EE_CLR,
++        KC_NXT, LT(0, KC_BT1), LT(0, KC_BT2), LT(0, KC_BT3), LT(0, KC_2G4), _______, _______, _______, _______, _______, _______, _______, _______, _______,          _______,
++        _______, _______, _______, _______, _______, _______, _______, _______, _______, _______, _______, _______, _______, _______,          _______,
++        _______, _______, _______, _______, _______, _______, _______, _______, _______, _______, _______, _______,          _______, _______, _______,
++        _______, _______, _______,                            _______,                          _______, _______,            _______, _______, _______
++    ),
++
++    [MAC_BASE] = LAYOUT(
++        _______, _______, _______, _______, _______, _______, _______, _______, _______, _______, _______, _______, _______, _______, _______, _______,
++        _______, _______, _______, _______, _______, _______, _______, _______, _______, _______, _______, _______, _______, _______,          _______,
++        _______, _______, _______, _______, _______, _______, _______, _______, _______, _______, _______, _______, _______, _______,          _______,
++        _______, _______, _______, _______, _______, _______, _______, _______, _______, _______, _______, _______,          _______, _______, _______,
++        _______, _______, _______,                            _______,                          _______, _______,            _______, _______, _______
++    ),
++
++    [MAC_FN] = LAYOUT(
++        _______, _______, _______, _______, _______, _______, _______, _______, _______, _______, _______, _______, _______, _______, _______, _______,
++        _______, _______, _______, _______, _______, _______, _______, _______, _______, _______, _______, _______, _______, _______,          _______,
++        _______, _______, _______, _______, _______, _______, _______, _______, _______, _______, _______, _______, _______, _______,          _______,
++        _______, _______, _______, _______, _______, _______, _______, _______, _______, _______, _______, _______,          _______, _______, _______,
++        _______, _______, _______,                            _______,                          _______, _______,            _______, _______, _______
++    )
++};
+diff --git a/keyboards/neo/neo65_trimode/mcuconf.h b/keyboards/neo/neo65_trimode/mcuconf.h
+new file mode 100644
+index 0000000..63fe01f
+--- /dev/null
++++ b/keyboards/neo/neo65_trimode/mcuconf.h
+@@ -0,0 +1,13 @@
++// Copyright 2025 emolitor github.com/emolitor)
++// Copyright (C) 2022 jonylee@hfd
++// SPDX-License-Identifier: GPL-2.0-or-later
++
++#pragma once
++
++#include_next <mcuconf.h>
++
++#undef WB32_SERIAL_USE_UART1
++#define WB32_SERIAL_USE_UART1 TRUE
++
++#undef WB32_SPI_USE_QSPI
++#define WB32_SPI_USE_QSPI TRUE
+diff --git a/keyboards/neo/neo65_trimode/neo65_trimode.c b/keyboards/neo/neo65_trimode/neo65_trimode.c
+new file mode 100644
+index 0000000..25a4bd1
+--- /dev/null
++++ b/keyboards/neo/neo65_trimode/neo65_trimode.c
+@@ -0,0 +1,348 @@
++// Copyright 2025 emolitor (github.com/emolitor)
++// Copyright 2024 Westberry Technology (ChangZhou) Corp., Ltd
++// SPDX-License-Identifier: GPL-2.0-or-later*/
++
++#include QMK_KEYBOARD_H
++#include "wireless.h"
++
++typedef union {
++    uint32_t raw;
++    struct {
++        uint8_t flag : 1;
++        uint8_t devs : 3;
++    };
++} confinfo_t;
++confinfo_t confinfo;
++
++uint32_t post_init_timer = 0x00;
++
++// Possible LED states.
++enum { LED_OFF = 0, LED_ON = 1, LED_BLINK_SLOW = 2, LED_BLINK_FAST = 3 };
++
++// The size of this should match the number of devices in the device index in
++// westberry/wireless/module.h. Default to zero to set all LEDs to a default
++// state of OFF.
++static uint8_t led_blink_state[7] = {0};
++
++// Implement a circular linked list of devices to support FN+TAB device
++// selection
++struct devs_list {
++    int               devs;
++    struct devs_list *next;
++};
++
++struct devs_list devs[] = {
++    {.devs = DEVS_USB, .next = &devs[1]},
++    {.devs = DEVS_BT1, .next = &devs[2]},
++    {.devs = DEVS_BT2, .next = &devs[3]},
++    {.devs = DEVS_BT3, .next = &devs[4]},
++    {.devs = DEVS_2G4, .next = &devs[0]}
++};
++
++struct devs_list *current_dev = &devs[0]; // Default circular linked list to USB device
++
++// Hack
++void md_send_devinfo(const char *name);
++
++// We use per-key tapping term to allow the wireless keys to have a much
++// longer tapping term, therefore a longer hold, to match the default
++// firmware behaviour.
++uint16_t get_tapping_term(uint16_t keycode, keyrecord_t *record) {
++    switch (keycode) {
++        case LT(0, KC_BT1):
++        case LT(0, KC_BT2):
++        case LT(0, KC_BT3):
++        case LT(0, KC_2G4):
++            return WIRELESS_TAPPING_TERM;
++        default:
++            return TAPPING_TERM;
++    }
++}
++
++uint32_t led_blink_callback(uint32_t trigger_time, void *cb_arg) {
++    static const uint8_t pattern[4] = {0x00, 0xff, 0x0f, 0xaa};
++    static uint8_t       phase      = 0;
++    phase                           = (phase + 1) % 8;
++
++    // Default all connection indicators to off
++    led_blink_state[DEVS_USB] = LED_OFF;
++    led_blink_state[DEVS_BT1] = LED_OFF;
++    led_blink_state[DEVS_BT2] = LED_OFF;
++    led_blink_state[DEVS_BT3] = LED_OFF;
++    led_blink_state[DEVS_2G4] = LED_OFF;
++
++    // Set active indicator LED mode
++    if (*md_getp_state() == MD_STATE_PAIRING) {
++        led_blink_state[confinfo.devs] = LED_BLINK_FAST;
++    } else if (confinfo.devs != DEVS_USB && *md_getp_state() != MD_STATE_CONNECTED) {
++        led_blink_state[confinfo.devs] = LED_BLINK_SLOW;
++    } else {
++        led_blink_state[confinfo.devs] = LED_ON;
++    }
++
++    uint8_t bit = 1 << phase;
++    gpio_write_pin(ESCAPE_PIN, (pattern[led_blink_state[DEVS_USB]] & bit) != 0);
++    gpio_write_pin(DEVS_BT1_PIN, (pattern[led_blink_state[DEVS_BT1]] & bit) != 0);
++    gpio_write_pin(DEVS_BT2_PIN, (pattern[led_blink_state[DEVS_BT2]] & bit) != 0);
++    gpio_write_pin(DEVS_BT3_PIN, (pattern[led_blink_state[DEVS_BT3]] & bit) != 0);
++    gpio_write_pin(DEVS_2G4_PIN, (pattern[led_blink_state[DEVS_2G4]] & bit) != 0);
++
++    return LED_BLINK_FAST_PERIOD_MS / 2;
++}
++
++void keyboard_post_init_kb(void) {
++    confinfo.raw = eeconfig_read_kb();
++    if (!confinfo.raw) {
++        confinfo.flag = true;
++        confinfo.devs = DEVS_USB;
++        eeconfig_update_kb(confinfo.raw);
++    }
++
++    gpio_set_pin_output(ESCAPE_PIN);
++    gpio_set_pin_output(DEVS_BT1_PIN);
++    gpio_set_pin_output(DEVS_BT2_PIN);
++    gpio_set_pin_output(DEVS_BT3_PIN);
++    gpio_set_pin_output(DEVS_2G4_PIN);
++
++    // Set GPIO as high input for battery charging state
++    //gpio_set_pin_input(BT_CABLE_PIN);
++    //gpio_set_pin_input_high(BT_CHARGE_PIN);
++
++    // Set USB_POWER_EN_PIN state before enabling the output to avoid instability
++    if (confinfo.devs == DEVS_USB && gpio_read_pin(BT_CABLE_PIN)) {
++        gpio_write_pin_low(USB_POWER_EN_PIN);
++    } else {
++        gpio_write_pin_high(USB_POWER_EN_PIN);
++    }
++    gpio_set_pin_output(USB_POWER_EN_PIN);
++
++    wireless_init();
++    md_send_devinfo(MD_BT_NAME);
++    wait_ms(10);
++    wireless_devs_change(!confinfo.devs, confinfo.devs, false);
++    post_init_timer = timer_read32();
++
++    defer_exec(LED_BLINK_FAST_PERIOD_MS / 2, led_blink_callback, NULL);
++
++    keyboard_post_init_user();
++}
++
++void usb_power_connect(void) {
++    gpio_write_pin_low(USB_POWER_EN_PIN);
++}
++
++void usb_power_disconnect(void) {
++    gpio_write_pin_high(USB_POWER_EN_PIN);
++}
++
++void suspend_wakeup_init_kb(void) {
++    wireless_devs_change(wireless_get_current_devs(), wireless_get_current_devs(), false);
++    suspend_wakeup_init_user();
++}
++
++bool lpwr_is_allow_timeout_hook(void) {
++    if (wireless_get_current_devs() == DEVS_USB) {
++        return false;
++    }
++
++    return true;
++}
++
++void wireless_post_task(void) {
++    if (post_init_timer && timer_elapsed32(post_init_timer) >= 100) {
++        md_send_devctrl(MD_SND_CMD_DEVCTRL_FW_VERSION);   // get the module fw version.
++        md_send_devctrl(MD_SND_CMD_DEVCTRL_SLEEP_BT_EN);  // timeout 30min to sleep in bt mode, enable
++        md_send_devctrl(MD_SND_CMD_DEVCTRL_SLEEP_2G4_EN); // timeout 30min to sleep in 2.4g mode, enable
++        wireless_devs_change(!confinfo.devs, confinfo.devs, false);
++        post_init_timer = 0x00;
++    }
++}
++
++void md_devs_change(uint8_t devs, bool reset) {
++    switch (devs) {
++        case DEVS_USB: {
++            md_send_devctrl(MD_SND_CMD_DEVCTRL_USB);
++        } break;
++        case DEVS_2G4: {
++            md_send_devctrl(MD_SND_CMD_DEVCTRL_2G4);
++            if (reset) {
++                md_send_devctrl(MD_SND_CMD_DEVCTRL_PAIR);
++            }
++        } break;
++        case DEVS_BT1: {
++            md_send_devctrl(MD_SND_CMD_DEVCTRL_BT1);
++            if (reset) {
++                md_send_devctrl(MD_SND_CMD_DEVCTRL_PAIR);
++            }
++        } break;
++        case DEVS_BT2: {
++            md_send_devctrl(MD_SND_CMD_DEVCTRL_BT2);
++            if (reset) {
++                md_send_devctrl(MD_SND_CMD_DEVCTRL_PAIR);
++            }
++        } break;
++        case DEVS_BT3: {
++            md_send_devctrl(MD_SND_CMD_DEVCTRL_BT3);
++            if (reset) {
++                md_send_devctrl(MD_SND_CMD_DEVCTRL_PAIR);
++            }
++        } break;
++        default:
++            break;
++    }
++}
++
++bool process_record_kb(uint16_t keycode, keyrecord_t *record) {
++    if (process_record_user(keycode, record) != true) {
++        return false;
++    }
++
++    switch (keycode) {
++        case KC_USB: {
++            wireless_devs_change(wireless_get_current_devs(), DEVS_USB, false);
++            return false;
++        }
++        case KC_NXT: {
++            if (record->event.pressed) {
++                current_dev = current_dev->next;
++                wireless_devs_change(wireless_get_current_devs(), current_dev->devs, false);
++                return false;
++            }
++        }
++        case LT(0, KC_BT1): {
++            if (record->tap.count && record->event.pressed) {
++                wireless_devs_change(wireless_get_current_devs(), DEVS_BT1, false);
++            } else if (record->event.pressed && *md_getp_state() != MD_STATE_PAIRING) {
++                wireless_devs_change(wireless_get_current_devs(), DEVS_BT1, true);
++            }
++            return false;
++        }
++        case LT(0, KC_BT2): {
++            if (record->tap.count && record->event.pressed) {
++                wireless_devs_change(wireless_get_current_devs(), DEVS_BT2, false);
++            } else if (record->event.pressed && *md_getp_state() != MD_STATE_PAIRING) {
++                wireless_devs_change(wireless_get_current_devs(), DEVS_BT2, true);
++            }
++            return false;
++        }
++        case LT(0, KC_BT3): {
++            if (record->tap.count && record->event.pressed) {
++                wireless_devs_change(wireless_get_current_devs(), DEVS_BT3, false);
++            } else if (record->event.pressed && *md_getp_state() != MD_STATE_PAIRING) {
++                wireless_devs_change(wireless_get_current_devs(), DEVS_BT3, true);
++            }
++            return false;
++        }
++        case LT(0, KC_2G4): {
++            if (record->tap.count && record->event.pressed) {
++                wireless_devs_change(wireless_get_current_devs(), DEVS_2G4, false);
++            } else if (record->event.pressed && *md_getp_state() != MD_STATE_PAIRING) {
++                wireless_devs_change(wireless_get_current_devs(), DEVS_2G4, true);
++            }
++            return false;
++        }
++        default:
++            return true;
++    }
++}
++
++void wireless_devs_change_kb(uint8_t old_devs, uint8_t new_devs, bool reset) {
++    if (confinfo.devs != wireless_get_current_devs()) {
++        confinfo.devs = wireless_get_current_devs();
++        eeconfig_update_kb(confinfo.raw);
++    }
++}
++
++// Force MCU reset on unhandled_exception
++void _unhandled_exception(void) {
++    mcu_reset();
++}
++
++// Exprimental change to fix duplicate and hung key presses on wireless
++void wireless_send_nkro(report_nkro_t *report) {
++    static report_keyboard_t temp_report_keyboard                 = {0};
++    uint8_t                  wls_report_nkro[MD_SND_CMD_NKRO_LEN] = {0};
++
++#ifdef NKRO_ENABLE
++    if (report != NULL) {
++        report_nkro_t temp_report_nkro = *report;
++        uint8_t       key_count        = 0;
++
++        temp_report_keyboard.mods = temp_report_nkro.mods;
++        for (uint8_t i = 0; i < NKRO_REPORT_BITS; i++) {
++            key_count += __builtin_popcount(temp_report_nkro.bits[i]);
++        }
++
++        /*
++         * Use NKRO for sending when more than 6 keys are pressed
++         * to solve the issue of the lack of a protocol flag in wireless mode.
++         */
++
++        for (uint8_t i = 0; i < key_count; i++) {
++            uint8_t usageid;
++            uint8_t idx, n = 0;
++
++            for (n = 0; n < NKRO_REPORT_BITS && !temp_report_nkro.bits[n]; n++) {
++            }
++            usageid = (n << 3) | biton(temp_report_nkro.bits[n]);
++            del_key_bit(&temp_report_nkro, usageid);
++
++            for (idx = 0; idx < WLS_KEYBOARD_REPORT_KEYS; idx++) {
++                if (temp_report_keyboard.keys[idx] == usageid) {
++                    goto next;
++                }
++            }
++
++            for (idx = 0; idx < WLS_KEYBOARD_REPORT_KEYS; idx++) {
++                if (temp_report_keyboard.keys[idx] == 0x00) {
++                    temp_report_keyboard.keys[idx] = usageid;
++                    break;
++                }
++            }
++        next:
++            if (idx == WLS_KEYBOARD_REPORT_KEYS && (usageid < (MD_SND_CMD_NKRO_LEN * 8))) {
++                wls_report_nkro[usageid / 8] |= 0x01 << (usageid % 8);
++            }
++        }
++
++        temp_report_nkro = *report;
++
++        // find key up and del it.
++        uint8_t nkro_keys = key_count;
++        for (uint8_t i = 0; i < WLS_KEYBOARD_REPORT_KEYS; i++) {
++            report_nkro_t found_report_nkro;
++            uint8_t       usageid = 0x00;
++            uint8_t       n;
++
++            found_report_nkro = temp_report_nkro;
++
++            for (uint8_t c = 0; c < nkro_keys; c++) {
++                for (n = 0; n < NKRO_REPORT_BITS && !found_report_nkro.bits[n]; n++) {
++                }
++                usageid = (n << 3) | biton(found_report_nkro.bits[n]);
++                del_key_bit(&found_report_nkro, usageid);
++                if (usageid == temp_report_keyboard.keys[i]) {
++                    del_key_bit(&temp_report_nkro, usageid);
++                    nkro_keys--;
++                    break;
++                }
++            }
++
++            if (usageid != temp_report_keyboard.keys[i]) {
++                temp_report_keyboard.keys[i] = 0x00;
++            }
++        }
++
++    } else {
++        memset(&temp_report_keyboard, 0, sizeof(temp_report_keyboard));
++    }
++#endif
++    void wireless_task(void);
++    bool smsg_is_busy(void);
++    while (smsg_is_busy()) {
++        wireless_task();
++    }
++    extern host_driver_t wireless_driver;
++    wireless_driver.send_keyboard(&temp_report_keyboard);
++    md_send_nkro(wls_report_nkro);
++}
+diff --git a/keyboards/neo/neo65_trimode/readme.md b/keyboards/neo/neo65_trimode/readme.md
+new file mode 100644
+index 0000000..8100893
+--- /dev/null
++++ b/keyboards/neo/neo65_trimode/readme.md
+@@ -0,0 +1,43 @@
++# Neo65 Tri-mode
++The Neo65 Tri-mode is based on a Westberry Tech WB32FQ95 MCU in a LQFP64 
++package and can be programmed with wb32-dfu. The keyboard uses a WCH CH582F 
++chip running a proprietary firmware to provide wireless connectivity. This is 
++a community port which was derived from a partial source originally released 
++by the manufacturer and reverse engineered by probing the hardware directly.
++
++
++## Flashing a new firmware
++Hold ESCAPE [0,0] to enter bootloader mode while inserting the USB cable into
++the keyboard. Then run the following to flash the firmware.
++```shell
++qmk flash -kb neo/neo65_trimode -km default
++```
++
++
++## Quirks
++The Neo65 uses a slightly different way to initialize the bluetooth device
++names. As the wireless stack is initialized in `keyboard_post_init_kb` a call
++is made to `md_send_devinfo` where the bluetooth name is passed but with the
++`$` character as the last character. The `$` is replaced with the BT device
++number when pairing. This seems to be a feature unique to this version of the
++CH582F firmware. This also means during pairing we do not 'CLEAN' the device
++and we do not upddate the device name. We simply send PAIR to `md_send_devctrl`.
++
++
++## How are the LEDs wired?
++* PD2 is wired to the ESC LED
++* PA8 is wired to the CAPSLOCK LED
++* PC11 is wired to the Q LED
++* PC10 is wired to the W LED
++* PA15 is wired to the E LED
++* PC0 is wired to the R LED
++
++
++## Reference Material
++The following shouldn't be upstreamed but I've included documentation relevant
++for porting in the repo to have everything in a single place.
++* [WB32FQ95 Data Sheet](../../../em-documentation/EN_DS1104041_WB32FQ95xC_V01.pdf)
++* [WB32FQ95 Reference Manual](../../../em-documentation/EN_RM2905025_WB32FQ95xx_V01.pdf)
++* [WCH CH582F Data Sheet](../../../em-documentation/CH583DS1.PDF)
++* [Puya P25D80SH Data Sheet](../../../em-documentation/PUYA-P25Q80H-SSH-IT_C194872.pdf)
++* [TP4056 Data Sheet](../../../em-documentation/TP4056.pdf)
+diff --git a/keyboards/neo/neo65_trimode/rules.mk b/keyboards/neo/neo65_trimode/rules.mk
+new file mode 100644
+index 0000000..a38990f
+--- /dev/null
++++ b/keyboards/neo/neo65_trimode/rules.mk
+@@ -0,0 +1 @@
++include keyboards/neo/wireless/wireless.mk
+diff --git a/keyboards/neo/wireless/lowpower.c b/keyboards/neo/wireless/lowpower.c
+new file mode 100644
+index 0000000..ab530f9
+--- /dev/null
++++ b/keyboards/neo/wireless/lowpower.c
+@@ -0,0 +1,312 @@
++// Copyright 2024 Su (@isuua)
++// SPDX-License-Identifier: GPL-2.0-or-later
++
++#include "quantum.h"
++#include "wireless.h"
++#include "usb_main.h"
++
++#ifndef LPWR_TIMEOUT
++#    define LPWR_TIMEOUT 300000 // 5min
++#endif
++
++#ifndef LPWR_PRESLEEP_DELAY
++#    define LPWR_PRESLEEP_DELAY 200
++#endif
++
++#ifndef LPWR_STOP_DELAY
++#    define LPWR_STOP_DELAY 200
++#endif
++
++#ifndef LPWR_WAKEUP_DELAY
++#    define LPWR_WAKEUP_DELAY 200
++#endif
++
++static lpwr_state_t lpwr_state       = LPWR_NORMAL;
++static lpwr_mode_t lpwr_mode         = LPWR_MODE_TIMEOUT;
++static uint32_t lpwr_timeout_value   = LPWR_TIMEOUT;
++static uint32_t lpwr_timestamp       = 0x00;
++static lpwr_wakeupcd_t lpwr_wakeupcd = LPWR_WAKEUP_NONE;
++static bool manual_timeout           = false;
++
++static bool rgb_enable_bak = false;
++
++void last_matrix_activity_trigger(void);
++
++void lpwr_clock_enable(void);
++void lpwr_enter_stop(void);
++void lpwr_exti_init(void);
++void mcu_stop_mode(void);
++
++extern void matrix_init_pins(void);
++
++lpwr_state_t lpwr_get_state(void) {
++    return lpwr_state;
++}
++
++void lpwr_set_state(lpwr_state_t state) {
++    lpwr_state = state;
++}
++
++lpwr_mode_t lpwr_get_mode(void) {
++    return lpwr_mode;
++}
++
++void lpwr_set_mode(lpwr_mode_t mode) {
++    lpwr_mode = mode;
++}
++
++void lpwr_set_timeout_value(uint32_t timeout) {
++    lpwr_timeout_value = timeout;
++}
++
++uint32_t lpwr_timeout_value_read(void) {
++    return lpwr_timeout_value;
++}
++
++void lpwr_update_timestamp(void) {
++    lpwr_timestamp = sync_timer_read32();
++}
++
++uint32_t lpwr_timestamp_read(void) {
++    return lpwr_timestamp;
++}
++
++void lpwr_set_sleep_wakeupcd(lpwr_wakeupcd_t wakeupcd) {
++    lpwr_wakeupcd = wakeupcd;
++}
++
++lpwr_wakeupcd_t lpwr_get_sleep_wakeupcd(void) {
++    return lpwr_wakeupcd;
++}
++
++void lpwr_clock_enable(void) __attribute__((weak));
++void lpwr_clock_enable(void) {}
++
++void lpwr_exti_init(void) __attribute__((weak));
++void lpwr_exti_init(void) {}
++
++void mcu_stop_mode(void) __attribute__((weak));
++void mcu_stop_mode(void) {}
++
++void lpwr_enter_stop(void) {
++    chSysLock();
++    lpwr_exti_init();
++    chSysUnlock();
++
++    chSysDisable();
++    mcu_stop_mode();
++    lpwr_clock_enable();
++    matrix_init_pins();
++    chSysEnable();
++}
++
++void lpwr_set_timeout_manual(bool enable) {
++    manual_timeout = enable;
++}
++
++bool lpwr_get_timeout_manual(void) {
++    return manual_timeout;
++}
++
++// 2.4g mode, host state
++void md_receive_host_cb(bool resume) {
++
++    if (resume) {
++        if (lpwr_get_state() != LPWR_NORMAL) {
++            lpwr_update_timestamp();
++            lpwr_set_state(LPWR_WAKEUP);
++        }
++    } else {
++        if (lpwr_get_state() == LPWR_NORMAL) {
++            manual_timeout = true;
++        }
++    }
++}
++
++bool lpwr_is_allow_timeout_hook(void) __attribute__((weak));
++bool lpwr_is_allow_timeout_hook(void) {
++    return true;
++}
++
++bool lpwr_is_allow_timeout(void) __attribute__((weak));
++bool lpwr_is_allow_timeout(void) {
++    uint32_t timeout = lpwr_timeout_value_read();
++
++    if (lpwr_is_allow_timeout_hook() != true) {
++        manual_timeout = false;
++        return false;
++    }
++
++    //if ((wireless_get_current_devs() == DEVS_USB) && (USB_DRIVER.state == USB_ACTIVE)) {
++    if (wireless_get_current_devs() == DEVS_USB) {   
++            manual_timeout = false;
++        return false;
++    }
++
++    if (manual_timeout || (timeout && (last_input_activity_elapsed() >= timeout))) {
++        manual_timeout = false;
++        return true;
++    }
++
++    return false;
++}
++
++bool lpwr_is_allow_presleep_hook(void) __attribute__((weak));
++bool lpwr_is_allow_presleep_hook(void) {
++    return true;
++}
++
++bool lpwr_is_allow_presleep(void) __attribute__((weak));
++bool lpwr_is_allow_presleep(void) {
++    uint32_t delay = LPWR_PRESLEEP_DELAY;
++
++    if (lpwr_is_allow_presleep_hook() != true) {
++        return false;
++    }
++
++    if (!delay || (sync_timer_elapsed32(lpwr_timestamp_read()) >= delay)) {
++        return true;
++    }
++
++    return false;
++}
++
++bool lpwr_is_allow_stop_hook(void) __attribute__((weak));
++bool lpwr_is_allow_stop_hook(void) {
++    return true;
++}
++
++bool lpwr_is_allow_stop(void) __attribute__((weak));
++bool lpwr_is_allow_stop(void) {
++    uint32_t delay = LPWR_STOP_DELAY;
++
++    if (lpwr_is_allow_stop_hook() != true) {
++        return false;
++    }
++
++    if (!delay || (sync_timer_elapsed32(lpwr_timestamp_read()) >= delay)) {
++        return true;
++    }
++
++    return false;
++}
++
++bool lpwr_is_allow_wakeup_hook(void) __attribute__((weak));
++bool lpwr_is_allow_wakeup_hook(void) {
++    return true;
++}
++
++bool lpwr_is_allow_wakeup(void) __attribute__((weak));
++bool lpwr_is_allow_wakeup(void) {
++    uint32_t delay = LPWR_WAKEUP_DELAY;
++
++    if (lpwr_is_allow_wakeup_hook() != true) {
++        return false;
++    }
++
++    if (!delay || (sync_timer_elapsed32(lpwr_timestamp_read()) >= delay)) {
++        return true;
++    }
++
++    return false;
++}
++
++void lpwr_presleep_hook(void) __attribute__((weak));
++void lpwr_presleep_hook(void) {}
++
++void lpwr_presleep_cb(void) __attribute__((weak));
++void lpwr_presleep_cb(void) {
++
++#if defined(RGB_MATRIX_ENABLE)
++    rgb_enable_bak = rgb_matrix_is_enabled();
++    rgb_matrix_disable_noeeprom();
++#elif defined(RGBLIGHT_ENABLE)
++    rgb_enable_bak = rgblight_is_enabled();
++    rgblight_disable_noeeprom();
++#else
++    rgb_enable_bak = false;
++#endif
++    suspend_power_down();
++    lpwr_presleep_hook();
++}
++
++void lpwr_stop_hook_pre(void) __attribute__((weak));
++void lpwr_stop_hook_pre(void) {}
++
++void lpwr_stop_hook_post(void) __attribute__((weak));
++void lpwr_stop_hook_post(void) {}
++
++void lpwr_stop_cb(void) __attribute__((weak));
++void lpwr_stop_cb(void) {
++
++    lpwr_set_sleep_wakeupcd(LPWR_WAKEUP_NONE);
++
++    lpwr_stop_hook_pre();
++    lpwr_enter_stop();
++
++    switch (lpwr_get_sleep_wakeupcd()) {
++        case LPWR_WAKEUP_UART: {
++            lpwr_set_state(LPWR_STOP);
++        } break;
++        default: {
++            lpwr_set_state(LPWR_WAKEUP);
++        } break;
++    }
++
++    lpwr_stop_hook_post();
++}
++
++void lpwr_wakeup_hook(void) __attribute__((weak));
++void lpwr_wakeup_hook(void) {}
++
++void lpwr_wakeup_cb(void) __attribute__((weak));
++void lpwr_wakeup_cb(void) {
++
++    if (rgb_enable_bak) {
++#if defined(RGB_MATRIX_ENABLE)
++        rgb_matrix_enable_noeeprom();
++#elif defined(RGBLIGHT_ENABLE)
++        rgblight_enable_noeeprom();
++#endif
++    }
++
++    suspend_wakeup_init();
++    lpwr_wakeup_hook();
++
++    last_matrix_activity_trigger();
++}
++
++void lpwr_task(void) __attribute__((weak));
++void lpwr_task(void) {
++
++    switch (lpwr_get_state()) {
++        case LPWR_NORMAL: {
++            if (lpwr_is_allow_timeout()) {
++                lpwr_update_timestamp();
++                lpwr_set_state(LPWR_PRESLEEP);
++            }
++        } break;
++        case LPWR_PRESLEEP: {
++            if (lpwr_is_allow_presleep()) {
++                lpwr_presleep_cb();
++                lpwr_update_timestamp();
++                lpwr_set_state(LPWR_STOP);
++            }
++        } break;
++        case LPWR_STOP: {
++            if (lpwr_is_allow_stop()) {
++                lpwr_update_timestamp();
++                lpwr_stop_cb();
++            }
++        } break;
++        case LPWR_WAKEUP: {
++            if (lpwr_is_allow_wakeup()) {
++                lpwr_wakeup_cb();
++                lpwr_update_timestamp();
++                lpwr_set_state(LPWR_NORMAL);
++            }
++        } break;
++        default:
++            break;
++    }
++}
+diff --git a/keyboards/neo/wireless/lowpower.h b/keyboards/neo/wireless/lowpower.h
+new file mode 100644
+index 0000000..e7d60a4
+--- /dev/null
++++ b/keyboards/neo/wireless/lowpower.h
+@@ -0,0 +1,39 @@
++// Copyright 2024 Su (@isuua)
++// SPDX-License-Identifier: GPL-2.0-or-later
++
++#pragma once
++
++typedef enum {
++    LPWR_NORMAL = 0,
++    LPWR_PRESLEEP,
++    LPWR_STOP,
++    LPWR_WAKEUP,
++} lpwr_state_t;
++
++typedef enum {
++    LPWR_WAKEUP_NONE = 0,
++    LPWR_WAKEUP_MATRIX,
++    LPWR_WAKEUP_UART,
++    LPWR_WAKEUP_CABLE,
++    LPWR_WAKEUP_USB,
++    LPWR_WAKEUP_ONEKEY,
++    LPWR_WAKEUP_ENCODER,
++    LPWR_WAKEUP_SWITCH,
++} lpwr_wakeupcd_t;
++
++typedef enum {
++    LPWR_MODE_TIMEOUT = 0,
++} lpwr_mode_t;
++
++lpwr_state_t lpwr_get_state(void);
++lpwr_mode_t lpwr_get_mode(void);
++uint32_t lpwr_timestamp_read(void);
++uint32_t lpwr_timeout_value_read(void);
++void lpwr_set_sleep_wakeupcd(lpwr_wakeupcd_t wakeupcd);
++lpwr_wakeupcd_t lpwr_get_sleep_wakeupcd(void);
++void lpwr_update_timestamp(void);
++void lpwr_set_timeout_manual(bool enable);
++bool lpwr_get_timeout_manual(void);
++void lpwr_set_state(lpwr_state_t state);
++void lpwr_set_mode(lpwr_mode_t mode);
++void lpwr_task(void);
+diff --git a/keyboards/neo/wireless/lpwr_wb32.c b/keyboards/neo/wireless/lpwr_wb32.c
+new file mode 100644
+index 0000000..65bc298
+--- /dev/null
++++ b/keyboards/neo/wireless/lpwr_wb32.c
+@@ -0,0 +1,209 @@
++// Copyright 2024 Su (@isuua)
++// SPDX-License-Identifier: GPL-2.0-or-later
++
++#include "quantum.h"
++#include "wireless.h"
++#include "util.h"
++
++#ifndef LPWR_UART_WAKEUP_DISABLE
++#    include "uart.h"
++#endif
++
++static ioline_t row_pins[MATRIX_ROWS] = MATRIX_ROW_PINS;
++static ioline_t col_pins[MATRIX_COLS] = MATRIX_COL_PINS;
++
++#if PAL_USE_CALLBACKS != TRUE
++#    error PAL_USE_CALLBACKS must be set to TRUE!
++#endif
++
++#if !((DIODE_DIRECTION == ROW2COL) || (DIODE_DIRECTION == COL2ROW))
++#    error DIODE_DIRECTION must be one of COL2ROW or ROW2COL!
++#endif
++
++// clang-format off
++static const uint32_t pre_lp_code[] = {553863175u, 554459777u, 1208378049u, 4026624001u, 688390415u, 554227969u, 3204472833u, 1198571264u, 1073807360u, 1073808388u};
++#define PRE_LP() ((void (*)(void))((unsigned int)(pre_lp_code) | 0x01))()
++
++static const uint32_t post_lp_code[] = {553863177u, 554459777u, 1208509121u, 51443856u, 4026550535u, 1745485839u, 3489677954u, 536895496u, 673389632u, 1198578684u, 1073807360u, 536866816u, 1073808388u};
++#define POST_LP() ((void (*)(void))((unsigned int)(post_lp_code) | 0x01))()
++// clang-format on
++
++extern void __early_init(void);
++extern void matrix_init_pins(void);
++
++void palcallback_cb(uint8_t line) __attribute__((weak));
++void palcallback_cb(uint8_t line) {}
++
++void palcallback(void *arg) {
++    uint8_t line = (uint32_t)arg & 0xFF;
++
++    switch (line) {
++#ifndef LPWR_UART_WAKEUP_DISABLE
++        case PAL_PAD(UART_RX_PIN): {
++            lpwr_set_sleep_wakeupcd(LPWR_WAKEUP_UART);
++        } break;
++#endif
++        default: {
++            lpwr_set_sleep_wakeupcd(LPWR_WAKEUP_MATRIX);
++        } break;
++    }
++
++    palcallback_cb(line);
++
++    irqDeinit();
++    EXTI->PR = 0xFFFFFFFF;
++}
++
++void pal_events_init(void) {
++
++    for (uint8_t i = 0; i < 16; i++) {
++        _pal_events[i].cb  = palcallback;
++        _pal_events[i].arg = (void *)(uint32_t)i;
++    }
++}
++
++void lpwr_exti_init_hook(void) __attribute__((weak));
++void lpwr_exti_init_hook(void) {}
++
++void lpwr_exti_init(void) {
++
++    pal_events_init();
++
++#if DIODE_DIRECTION == ROW2COL
++    for (uint8_t i = 0; i < ARRAY_SIZE(col_pins); i++) {
++        if (col_pins[i] != NO_PIN) {
++            gpio_set_pin_output_open_drain(col_pins[i]);
++            gpio_write_pin_low(col_pins[i]);
++        }
++    }
++
++    for (uint8_t i = 0; i < ARRAY_SIZE(row_pins); i++) {
++        if (row_pins[i] != NO_PIN) {
++            gpio_set_pin_input_high(row_pins[i]);
++            waitInputPinDelay();
++            palEnableLineEvent(row_pins[i], PAL_EVENT_MODE_BOTH_EDGES);
++        }
++    }
++#elif DIODE_DIRECTION == COL2ROW
++    for (uint8_t i = 0; i < ARRAY_SIZE(row_pins); i++) {
++        if (row_pins[i] != NO_PIN) {
++            gpio_set_pin_output_open_drain(row_pins[i]);
++            gpio_write_pin_low(row_pins[i]);
++        }
++    }
++
++    for (uint8_t i = 0; i < ARRAY_SIZE(col_pins); i++) {
++        if (col_pins[i] != NO_PIN) {
++            gpio_set_pin_input_high(col_pins[i]);
++            waitInputPinDelay();
++            palEnableLineEvent(col_pins[i], PAL_EVENT_MODE_BOTH_EDGES);
++        }
++    }
++#endif
++
++#ifndef LPWR_UART_WAKEUP_DISABLE
++    gpio_set_pin_input(UART_RX_PIN);
++    waitInputPinDelay();
++    palEnableLineEvent(UART_RX_PIN, PAL_EVENT_MODE_BOTH_EDGES);
++#endif
++
++    lpwr_exti_init_hook();
++
++    /* IRQ subsystem initialization.*/
++    irqInit();
++}
++
++void lpwr_clock_enable_user(void) __attribute__((weak));
++void lpwr_clock_enable_user(void) {}
++
++void lpwr_clock_enable(void) {
++
++    __early_init();
++
++    rccEnableEXTI();
++
++#if WB32_SERIAL_USE_UART1
++    rccEnableUART1();
++#endif
++#if WB32_SERIAL_USE_UART2
++    rccEnableUART2();
++#endif
++#if WB32_SERIAL_USE_UART3
++    rccEnableUART3();
++#endif
++#if WB32_SPI_USE_QSPI
++    rccEnableQSPI();
++#endif
++#if WB32_SPI_USE_SPIM2
++    rccEnableSPIM2();
++#endif
++#if WB32_I2C_USE_I2C1
++    rccEnableI2C1();
++#endif
++#if WB32_I2C_USE_I2C2
++    rccEnableI2C2();
++#endif
++#if WB32_GPT_USE_TIM1 || WB32_ICU_USE_TIM1 || WB32_PWM_USE_TIM1
++    rccEnableTIM1();
++#endif
++#if WB32_ST_USE_TIM2 || WB32_GPT_USE_TIM2 || WB32_ICU_USE_TIM2 || WB32_PWM_USE_TIM2
++    rccEnableTIM2();
++#endif
++#if WB32_ST_USE_TIM3 || WB32_GPT_USE_TIM3 || WB32_ICU_USE_TIM3 || WB32_PWM_USE_TIM3
++    rccEnableTIM3();
++#endif
++#if WB32_ST_USE_TIM4 || WB32_GPT_USE_TIM4 || WB32_ICU_USE_TIM4 || WB32_PWM_USE_TIM4
++    rccEnableTIM4();
++#endif
++
++#ifndef LPWR_UART_WAKEUP_DISABLE
++    palSetLineMode(UART_RX_PIN, PAL_MODE_ALTERNATE(UART_RX_PAL_MODE) | PAL_OUTPUT_TYPE_PUSHPULL | PAL_OUTPUT_SPEED_HIGHEST);
++#endif
++
++    lpwr_clock_enable_user();
++}
++
++void wb32_stop_mode(void) {
++
++    SysTick->CTRL &= ~SysTick_CTRL_ENABLE_Msk;
++
++    /* Prevent the chip from being unable to enter stop mode due to pending interrupts */
++#if 1
++    EXTI->PR = 0x7FFFF;
++    for (uint8_t i = 0; i < 8; i++) {
++        for (uint8_t j = 0; j < 32; j++) {
++            if (NVIC->ISPR[i] & (0x01UL < j)) {
++                NVIC->ICPR[i] = (0x01UL < j);
++            }
++        }
++    }
++    SCB->ICSR |= SCB_ICSR_PENDSTCLR_Msk; // Clear Systick IRQ Pending
++#endif
++
++    /* Clear all bits except DBP and FCLKSD bit */
++    PWR->CR0 &= 0x09U;
++
++    // STOP LP4 MODE S32KON
++    PWR->CR0 |= 0x3B004U;
++    PWR->CFGR = 0x3B3;
++
++    PRE_LP();
++
++    /* Set SLEEPDEEP bit of Cortex System Control Register */
++    SCB->SCR |= SCB_SCR_SLEEPDEEP_Msk;
++
++    /* Request Wait For Interrupt */
++    __WFI();
++
++    POST_LP();
++
++    /* Clear SLEEPDEEP bit of Cortex System Control Register */
++    SCB->SCR &= (~SCB_SCR_SLEEPDEEP_Msk);
++
++    SysTick->CTRL |= SysTick_CTRL_ENABLE_Msk;
++}
++
++void mcu_stop_mode(void) {
++
++    wb32_stop_mode();
++}
+diff --git a/keyboards/neo/wireless/md_raw.c b/keyboards/neo/wireless/md_raw.c
+new file mode 100644
+index 0000000..eebfc94
+--- /dev/null
++++ b/keyboards/neo/wireless/md_raw.c
+@@ -0,0 +1,30 @@
++// Copyright 2024 QMK
++// SPDX-License-Identifier: GPL-2.0-or-later
++
++#if RAW_ENABLE
++
++#    include "quantum.h"
++#    include "wireless.h"
++#    include "usb_endpoints.h"
++#    include "usb_main.h"
++
++void replaced_hid_send(uint8_t *data, uint8_t length) {
++
++    if (length != RAW_EPSIZE) {
++        return;
++    }
++
++    if (get_transport() == TRANSPORT_USB) {
++        send_report(USB_ENDPOINT_IN_RAW, data, length);
++    } else {
++        md_send_raw(data, length);
++    }
++}
++
++void md_receive_raw_cb(uint8_t *data, uint8_t length) {
++    void raw_hid_receive(uint8_t * data, uint8_t length);
++
++    raw_hid_receive(data, length);
++}
++
++#endif
+diff --git a/keyboards/neo/wireless/md_raw.h b/keyboards/neo/wireless/md_raw.h
+new file mode 100644
+index 0000000..9ec762b
+--- /dev/null
++++ b/keyboards/neo/wireless/md_raw.h
+@@ -0,0 +1,10 @@
++// Copyright 2024 QMK
++// SPDX-License-Identifier: GPL-2.0-or-later
++
++#pragma once
++
++#define RENAME_WITH_LINE(A, B) COMBINE(A, B)
++#define COMBINE(A, B) A##B
++#define raw_hid_send(a, b) RENAME_WITH_LINE(_temp_rhs_, __LINE__)(a, b)
++#define _temp_rhs_29 replaced_hid_send  // raw_hid.h
++#define _temp_rhs_464 replaced_hid_send // via.c
+diff --git a/keyboards/neo/wireless/module.c b/keyboards/neo/wireless/module.c
+new file mode 100644
+index 0000000..78f98ff
+--- /dev/null
++++ b/keyboards/neo/wireless/module.c
+@@ -0,0 +1,530 @@
++// Copyright 2024 Su (@isuua)
++// SPDX-License-Identifier: GPL-2.0-or-later
++
++#include "quantum.h"
++#include "module.h"
++#include "smsg.h"
++#include "uart.h"
++
++#ifndef MD_BAUD_RATE
++#    define MD_BAUD_RATE 115200
++#endif
++
++#ifndef MD_SNED_PKT_TIMEOUT
++#    define MD_SNED_PKT_TIMEOUT 10
++#endif
++
++#ifndef MD_SEND_PKT_RETRY
++#    define MD_SEND_PKT_RETRY 40
++#endif
++
++#ifndef MD_SEND_PKT_PAYLOAD_MAX
++#    define MD_SEND_PKT_PAYLOAD_MAX ((MD_RAW_SIZE) + 4)
++#endif
++
++#ifndef MD_BT1_NAME
++#    define MD_BT1_NAME PRODUCT " BT1"
++#endif
++
++#ifndef MD_BT2_NAME
++#    define MD_BT2_NAME PRODUCT " BT2"
++#endif
++
++#ifndef MD_BT3_NAME
++#    define MD_BT3_NAME PRODUCT " BT3"
++#endif
++
++#ifndef MD_BT4_NAME
++#    define MD_BT4_NAME PRODUCT " BT4"
++#endif
++
++#ifndef MD_BT5_NAME
++#    define MD_BT5_NAME PRODUCT " BT5"
++#endif
++
++#ifndef MD_DONGLE_MANUFACTURER
++#    define MD_DONGLE_MANUFACTURER MANUFACTURER
++#endif
++
++#ifndef MD_DONGLE_PRODUCT
++#    define MD_DONGLE_PRODUCT PRODUCT " Dongle"
++#endif
++
++#ifndef MD_RAW_SIZE
++#    define MD_RAW_SIZE 32
++#endif
++
++#define USBCONCAT(a, b) a##b
++#define USBSTR(s) USBCONCAT(L, s)
++
++typedef struct
++{
++    uint8_t state;
++    uint8_t indicator;
++    uint8_t version;
++    uint8_t bat;
++} md_info_t;
++
++static uint8_t md_pkt_payload[MD_SEND_PKT_PAYLOAD_MAX] = {0};
++static uint8_t md_rev_payload[MD_SEND_PKT_PAYLOAD_MAX] = {0};
++static uint8_t md_raw_payload[MD_RAW_SIZE]             = {0};
++
++static md_info_t md_info = {
++    .bat       = 100,
++    .indicator = 0,
++    .version   = 0,
++    .state     = MD_STATE_NONE,
++};
++
++static void md_send_ack(void) {
++
++    uint8_t sdata[0x03] = {0x61, 0x0D, 0x0A};
++    uart_transmit(sdata, sizeof(sdata));
++}
++
++static bool md_check_sum(const uint8_t *data, uint32_t length) {
++    uint8_t sum = 0;
++
++    for (uint32_t i = 0; i < (length - 1); i++) {
++        sum += data[i];
++    }
++
++    return sum == data[length - 1];
++}
++
++static void md_calc_check_sum(uint8_t *data, uint32_t length) {
++    uint8_t sum = 0;
++
++    for (uint32_t i = 0; i < length; i++) {
++        sum += data[i];
++    }
++
++    data[length] = sum;
++}
++
++bool md_receive_process_user(uint8_t *pdata, uint8_t len) __attribute__((weak));
++bool md_receive_process_user(uint8_t *pdata, uint8_t len) {
++    return true;
++}
++
++bool md_receive_process_kb(uint8_t *pdata, uint8_t len) __attribute__((weak));
++bool md_receive_process_kb(uint8_t *pdata, uint8_t len) {
++    return md_receive_process_user(pdata, len);
++}
++
++void md_receive_raw_cb(uint8_t *pdata, uint8_t len) __attribute__((weak));
++void md_receive_raw_cb(uint8_t *pdata, uint8_t len) {}
++
++void md_receive_host_cb(bool resume) __attribute__((weak));
++void md_receive_host_cb(bool resume) {}
++
++static void md_receive_msg_task(void) {
++    static uint32_t data_count = 0x00;
++    static uint8_t data_remain = 0x00;
++
++    while (uart_available()) {
++        uint8_t data = uart_read();
++
++        switch (data_count) {
++            case 0: { // cmd
++                switch (data) {
++                    case MD_REV_CMD_INDICATOR:
++                    case MD_REV_CMD_DEVCTRL:
++                    case MD_REV_CMD_BATVOL:
++                    case MD_REV_CMD_MD_FW_VERSION:
++                    case MD_REV_CMD_HOST_STATE:
++                    case 0x61: {
++                        md_rev_payload[data_count++] = data;
++                        data_remain                  = 2;
++                    } break;
++                    case MD_REV_CMD_RAW: {
++                        md_rev_payload[data_count++] = data;
++                        data_remain                  = 33;
++                    } break;
++                    default: {
++                        data_count = 0;
++                    } break;
++                }
++                continue;
++            } break;
++            case 1: {
++                md_rev_payload[data_count++] = data;
++                data_remain--;
++                continue;
++            } break;
++            case 2: {
++                // ACK
++                if ((md_rev_payload[0] == 0x61) && (md_rev_payload[1] == 0x0D) && (data == 0x0A)) {
++                    if (smsg_get_state() == smsg_state_busy) {
++                        smsg_set_state(smsg_state_replied);
++                    }
++                    data_count = 0;
++                    return;
++                }
++            }
++            default: {
++                md_rev_payload[data_count++] = data;
++                data_remain--;
++
++                if (data_remain) {
++                    continue;
++                }
++            } break;
++        }
++
++        if (md_check_sum(md_rev_payload, data_count)) {
++            md_send_ack();
++
++            if (md_receive_process_kb(md_rev_payload, data_count) != true) {
++                return;
++            }
++
++            switch (md_rev_payload[0]) {
++                case MD_REV_CMD_RAW: {
++                    uint8_t *pdata;
++                    pdata = &md_rev_payload[1];
++
++                    memcpy(md_raw_payload, pdata, 32);
++                    md_receive_raw_cb(md_raw_payload, 32);
++
++                } break;
++                case MD_REV_CMD_INDICATOR: {
++                    md_info.indicator = md_rev_payload[1];
++                } break;
++                case MD_REV_CMD_DEVCTRL: {
++                    switch (md_rev_payload[1]) {
++                        case MD_REV_CMD_DEVCTRL_PAIRING: {
++                            md_info.state = MD_STATE_PAIRING;
++                        } break;
++                        case MD_REV_CMD_DEVCTRL_CONNECTED: {
++                            md_info.state = MD_STATE_CONNECTED;
++                        } break;
++                        case MD_REV_CMD_DEVCTRL_DISCONNECTED: {
++                            md_info.state = MD_STATE_DISCONNECTED;
++                        } break;
++                        case MD_REV_CMD_DEVCTRL_REJECT: {
++                            md_info.state = MD_STATE_REJECT;
++                        } break;
++                        default:
++                            break;
++                    }
++                } break;
++                case MD_REV_CMD_BATVOL: {
++                    md_info.bat = md_rev_payload[1];
++                } break;
++                case MD_REV_CMD_MD_FW_VERSION: {
++                    md_info.version = md_rev_payload[1];
++                } break;
++                case MD_REV_CMD_HOST_STATE: {
++                    md_receive_host_cb(md_rev_payload[1] == MD_REV_CMD_HOST_STATE_RESUME);
++                } break;
++                default:
++                    break;
++            }
++        }
++        data_count = 0;
++    }
++}
++
++static void md_send_pkt_task(void) {
++    static uint32_t smsg_timer = 0x00;
++    static uint8_t smsg_retry  = 0;
++
++    switch (smsg_get_state()) {
++        case smsg_state_busy: {
++            if (sync_timer_elapsed32(smsg_timer) > (MD_SNED_PKT_TIMEOUT)) {
++                smsg_retry = 0;
++                smsg_set_state(smsg_state_retry);
++            }
++        } break;
++        case smsg_state_retry: {
++            if (++smsg_retry > MD_SEND_PKT_RETRY) {
++                smsg_retry = 0;
++                smsg_pop();
++            }
++            smsg_set_state(smsg_state_free);
++        } break;
++        case smsg_state_replied: {
++            smsg_pop();
++            smsg_set_state(smsg_state_free);
++        } // break;
++        case smsg_state_free: {
++            uint32_t size = smsg_peek(md_pkt_payload);
++            if (size) {
++                if (md_send_pkt(md_pkt_payload, size)) {
++                    smsg_timer = sync_timer_read32();
++                    smsg_set_state(smsg_state_busy);
++                } else {
++                    smsg_set_state(smsg_state_replied);
++                }
++            }
++        } break;
++        default:
++            break;
++    }
++}
++
++void md_init(void) {
++
++    uart_init(MD_BAUD_RATE);
++    smsg_init();
++
++    memset(md_pkt_payload, 0, sizeof(md_pkt_payload));
++}
++
++void md_main_task(void) {
++
++    md_send_pkt_task();
++    md_receive_msg_task();
++}
++
++uint8_t *md_getp_state(void) {
++
++    return &md_info.state;
++}
++
++uint8_t *md_getp_bat(void) {
++
++    return &md_info.bat;
++}
++
++uint8_t *md_getp_indicator(void) {
++
++    return &md_info.indicator;
++}
++
++uint8_t md_get_version(void) {
++
++    return md_info.version;
++}
++
++bool md_send_pkt(uint8_t *data, uint32_t len) {
++    bool retval = true;
++
++    if (!data || !len) {
++        return false;
++    }
++
++    // switch (*data) {
++    //     case MD_SND_CMD_RAW: {
++    //         retval = false;
++    //     } break;
++    //     default:
++    //         break;
++    // }
++
++    // send
++    uart_transmit(data, len);
++
++    return retval;
++}
++
++void md_send_kb(uint8_t *data) {
++    uint8_t sdata[MD_SND_CMD_KB_LEN + 2] = {0x00};
++
++    sdata[0] = MD_SND_CMD_SEND_KB;
++    memcpy(&sdata[1], data, sizeof(sdata) - 2);
++    md_calc_check_sum(sdata, sizeof(sdata) - 1);
++    smsg_push(sdata, sizeof(sdata));
++}
++
++void md_send_nkro(uint8_t *data) {
++    uint8_t sdata[MD_SND_CMD_NKRO_LEN + 2] = {0x00};
++
++    sdata[0] = MD_SND_CMD_SEND_NKRO;
++    memcpy(&sdata[1], data, sizeof(sdata) - 2);
++    md_calc_check_sum(sdata, sizeof(sdata) - 1);
++    smsg_push(sdata, sizeof(sdata));
++}
++
++void md_send_consumer(uint8_t *data) {
++    uint8_t sdata[MD_SND_CMD_CONSUMER_LEN + 2] = {0x00};
++
++    sdata[0] = MD_SND_CMD_SEND_CONSUMER;
++    memcpy(&sdata[1], data, sizeof(sdata) - 2);
++    md_calc_check_sum(sdata, sizeof(sdata) - 1);
++    smsg_push(sdata, sizeof(sdata));
++}
++
++void md_send_system(uint8_t *data) {
++    uint8_t sdata[MD_SND_CMD_SYSTEM_LEN + 2] = {0x00};
++
++    sdata[0] = MD_SND_CMD_SEND_SYSTEM;
++    memcpy(&sdata[1], data, sizeof(sdata) - 2);
++    md_calc_check_sum(sdata, sizeof(sdata) - 1);
++    smsg_push(sdata, sizeof(sdata));
++}
++
++void md_send_fn(uint8_t *data) {
++    uint8_t sdata[MD_SND_CMD_FN_LEN + 2] = {0x00};
++
++    sdata[0] = MD_SND_CMD_SEND_FN;
++    memcpy(&sdata[1], data, sizeof(sdata) - 2);
++    md_calc_check_sum(sdata, sizeof(sdata) - 1);
++    smsg_push(sdata, sizeof(sdata));
++}
++
++void md_send_mouse(uint8_t *data) {
++    uint8_t sdata[MD_SND_CMD_MOUSE_LEN + 2] = {0x00};
++
++    sdata[0] = MD_SND_CMD_SEND_MOUSE;
++    memcpy(&sdata[1], data, sizeof(sdata) - 2);
++    md_calc_check_sum(sdata, sizeof(sdata) - 1);
++    smsg_push(sdata, sizeof(sdata));
++}
++
++void md_send_devinfo(const char *name) {
++    uint8_t sdata[MD_SND_CMD_DEVINFO_LEN + 3] = {0x00};
++    uint8_t infolen                           = strlen((const char *)name);
++
++    if (infolen > MD_SND_CMD_DEVINFO_LEN) {
++        return;
++    }
++
++    sdata[0] = MD_SND_CMD_SEND_DEVINFO;
++    sdata[1] = infolen;
++
++    memcpy(&sdata[2], name, infolen);
++    md_calc_check_sum(sdata, infolen + 2);
++    smsg_push(sdata, sizeof(sdata));
++}
++
++void md_send_devctrl(uint8_t cmd) {
++    uint8_t sdata[3] = {0x00};
++
++    sdata[0] = MD_SND_CMD_DEVCTRL;
++    memcpy(&sdata[1], &cmd, sizeof(sdata) - 2);
++    md_calc_check_sum(sdata, sizeof(sdata) - 1);
++    smsg_push(sdata, sizeof(sdata));
++}
++
++void md_send_manufacturer(char *str, uint8_t len) {
++    uint8_t sdata[MD_SND_CMD_MANUFACTURER_LEN + 3] = {0x00};
++
++    if (len > MD_SND_CMD_MANUFACTURER_LEN) {
++        return;
++    }
++
++    sdata[0] = MD_SND_CMD_MANUFACTURER;
++    sdata[1] = len;
++    memcpy(&sdata[2], str, len);
++    md_calc_check_sum(sdata, len + 2);
++    smsg_push(sdata, len + 3);
++}
++
++void md_send_product(char *str, uint8_t len) {
++    uint8_t sdata[MD_SND_CMD_PRODUCT_LEN + 3] = {0x00};
++
++    if (len > MD_SND_CMD_PRODUCT_LEN) {
++        return;
++    }
++
++    sdata[0] = MD_SND_CMD_PRODUCT;
++    sdata[1] = len;
++    memcpy(&sdata[2], str, len);
++    md_calc_check_sum(sdata, len + 2);
++    smsg_push(sdata, len + 3);
++}
++
++void md_send_vpid(uint16_t vid, uint16_t pid) {
++    uint8_t sdata[4 + 2] = {0x00};
++    uint32_t vpid;
++
++    vpid = (pid << 16) | vid;
++
++    sdata[0] = MD_SND_CMD_VPID;
++    memcpy(&sdata[1], &vpid, sizeof(vpid));
++    md_calc_check_sum(sdata, sizeof(sdata) - 1);
++    smsg_push(sdata, sizeof(sdata));
++}
++
++void md_send_raw(uint8_t *data, uint8_t length) {
++    uint8_t sdata[MD_RAW_SIZE + 2] = {0x00};
++
++    if (length != MD_RAW_SIZE) {
++        return;
++    }
++
++    sdata[0] = MD_SND_CMD_RAW;
++    memcpy(&sdata[1], data, length);
++    md_calc_check_sum(sdata, sizeof(sdata) - 1);
++    smsg_push(sdata, sizeof(sdata));
++}
++
++void md_devs_change(uint8_t devs, bool reset) __attribute__((weak));
++void md_devs_change(uint8_t devs, bool reset) {
++
++    switch (devs) {
++        case DEVS_USB: {
++            md_send_devctrl(MD_SND_CMD_DEVCTRL_USB);
++        } break;
++        case DEVS_2G4: {
++            md_send_devctrl(MD_SND_CMD_DEVCTRL_2G4);
++            if (reset) {
++                if (md_get_version() < 48) {
++                    md_send_manufacturer(MD_DONGLE_MANUFACTURER, strlen(MD_DONGLE_MANUFACTURER));
++                    md_send_product(MD_DONGLE_PRODUCT, strlen(MD_DONGLE_PRODUCT));
++                } else { // Add Unicode character support starting from v48.
++                    md_send_manufacturer((char *)USBSTR(MD_DONGLE_MANUFACTURER), sizeof(USBSTR(MD_DONGLE_MANUFACTURER)));
++                    md_send_product((char *)USBSTR(MD_DONGLE_PRODUCT), sizeof(USBSTR(MD_DONGLE_PRODUCT)));
++                }
++                md_send_vpid(VENDOR_ID, PRODUCT_ID);
++                md_send_devctrl(MD_SND_CMD_DEVCTRL_CLEAN);
++                md_send_devctrl(MD_SND_CMD_DEVCTRL_PAIR);
++            }
++        } break;
++        case DEVS_BT1: {
++            md_send_devctrl(MD_SND_CMD_DEVCTRL_BT1);
++            if (reset) {
++                md_send_devctrl(MD_SND_CMD_DEVCTRL_CLEAN);
++                md_send_devinfo(MD_BT1_NAME);
++                md_send_devctrl(MD_SND_CMD_DEVCTRL_PAIR);
++            }
++        } break;
++        case DEVS_BT2: {
++            md_send_devctrl(MD_SND_CMD_DEVCTRL_BT2);
++            if (reset) {
++                md_send_devctrl(MD_SND_CMD_DEVCTRL_CLEAN);
++                md_send_devinfo(MD_BT2_NAME);
++                md_send_devctrl(MD_SND_CMD_DEVCTRL_PAIR);
++            }
++        } break;
++        case DEVS_BT3: {
++            md_send_devctrl(MD_SND_CMD_DEVCTRL_BT3);
++            if (reset) {
++                md_send_devctrl(MD_SND_CMD_DEVCTRL_CLEAN);
++                md_send_devinfo(MD_BT3_NAME);
++                md_send_devctrl(MD_SND_CMD_DEVCTRL_PAIR);
++            }
++        } break;
++        case DEVS_BT4: {
++            md_send_devctrl(MD_SND_CMD_DEVCTRL_BT4);
++            if (reset) {
++                md_send_devctrl(MD_SND_CMD_DEVCTRL_CLEAN);
++                md_send_devinfo(MD_BT4_NAME);
++                md_send_devctrl(MD_SND_CMD_DEVCTRL_PAIR);
++            }
++        } break;
++        case DEVS_BT5: {
++            md_send_devctrl(MD_SND_CMD_DEVCTRL_BT5);
++            if (reset) {
++                md_send_devctrl(MD_SND_CMD_DEVCTRL_CLEAN);
++                md_send_devinfo(MD_BT5_NAME);
++                md_send_devctrl(MD_SND_CMD_DEVCTRL_PAIR);
++            }
++        } break;
++        default:
++            break;
++    }
++}
++
++bool md_inquire_bat(void) {
++
++    if (smsg_is_busy()) {
++        return false;
++    }
++
++    md_send_devctrl(MD_SND_CMD_DEVCTRL_INQVOL);
++
++    return true;
++}
+diff --git a/keyboards/neo/wireless/module.h b/keyboards/neo/wireless/module.h
+new file mode 100644
+index 0000000..61a8a45
+--- /dev/null
++++ b/keyboards/neo/wireless/module.h
+@@ -0,0 +1,122 @@
++// Copyright 2024 Su (@isuua)
++// SPDX-License-Identifier: GPL-2.0-or-later
++
++#pragma once
++
++// device index
++enum {
++    DEVS_USB = 0,
++    DEVS_BT1,
++    DEVS_BT2,
++    DEVS_BT3,
++    DEVS_BT4,
++    DEVS_BT5,
++    DEVS_2G4,
++};
++
++enum {
++    MD_STATE_NONE = 0,
++    MD_STATE_PAIRING,
++    MD_STATE_CONNECTED,
++    MD_STATE_DISCONNECTED,
++    MD_STATE_REJECT,
++};
++
++enum {
++    MD_SND_CMD_KB_LEN           = 8,
++    MD_SND_CMD_NKRO_LEN         = 14,
++    MD_SND_CMD_CONSUMER_LEN     = 2,
++    MD_SND_CMD_SYSTEM_LEN       = 1,
++    MD_SND_CMD_FN_LEN           = 1,
++    MD_SND_CMD_MOUSE_LEN        = 5,
++    MD_SND_CMD_DEVINFO_LEN      = 18,
++    MD_SND_CMD_MANUFACTURER_LEN = 46,
++    MD_SND_CMD_PRODUCT_LEN      = 46,
++};
++
++enum {
++    /* send report */
++    MD_SND_CMD_SEND_KB       = 0xA1,
++    MD_SND_CMD_SEND_NKRO     = 0xA2,
++    MD_SND_CMD_SEND_CONSUMER = 0xA3,
++    MD_SND_CMD_SEND_SYSTEM   = 0xA4,
++    MD_SND_CMD_SEND_FN       = 0xA5,
++    MD_SND_CMD_SEND_MOUSE    = 0xA8,
++    MD_SND_CMD_SEND_DEVINFO  = 0xA9,
++    /* Dongle */
++    MD_SND_CMD_MANUFACTURER = 0xAB,
++    MD_SND_CMD_PRODUCT      = 0xAC,
++    MD_SND_CMD_VPID         = 0xAD,
++    MD_SND_CMD_RAW          = 0x91,
++    /* device ctrl */
++    MD_SND_CMD_DEVCTRL                    = 0xA6,
++    MD_SND_CMD_DEVCTRL_USB                = 0x11,
++    MD_SND_CMD_DEVCTRL_2G4                = 0x30,
++    MD_SND_CMD_DEVCTRL_BT1                = 0x31,
++    MD_SND_CMD_DEVCTRL_BT2                = 0x32,
++    MD_SND_CMD_DEVCTRL_BT3                = 0x33,
++    MD_SND_CMD_DEVCTRL_BT4                = 0x34,
++    MD_SND_CMD_DEVCTRL_BT5                = 0x35,
++    MD_SND_CMD_DEVCTRL_PAIR               = 0x51,
++    MD_SND_CMD_DEVCTRL_CLEAN              = 0x52,
++    MD_SND_CMD_DEVCTRL_INQVOL             = 0x53,
++    MD_SND_CMD_DEVCTRL_SLEEP_INSTANT      = 0x54, // reserved
++    MD_SND_CMD_DEVCTRL_SLEEP_BT_EN        = 0x55, // timeout 30min enable in BT mode
++    MD_SND_CMD_DEVCTRL_SLEEP_BT_DIS       = 0x56, // timeout 30min disable in BT mode
++    MD_SND_CMD_DEVCTRL_SLEEP_2G4_EN       = 0x57, // timeout 30min enable in 2.4G mode
++    MD_SND_CMD_DEVCTRL_SLEEP_2G4_DIS      = 0x58, // timeout 30min enable in 2.4G mode
++    MD_SND_CMD_DEVCTRL_RSV_DEBUG          = 0x60, // reserved
++    MD_SND_CMD_DEVCTRL_RSV_SLEEP          = 0x61, // reserved
++    MD_SND_CMD_DEVCTRL_FORCED_PAIRING_BT  = 0x62, // forced pairing, to be used in a factory environment.
++    MD_SND_CMD_DEVCTRL_FORCED_PAIRING_2G4 = 0x63, // forced pairing, to be used in a factory environment.
++    MD_SND_CMD_DEVCTRL_CHARGING           = 0x64, // battery power control.
++    MD_SND_CMD_DEVCTRL_CHARGING_STOP      = 0x65, // battery power control.
++    MD_SND_CMD_DEVCTRL_CHARGING_DONE      = 0x66, // battery power control.
++    MD_SND_CMD_DEVCTRL_FW_VERSION         = 0x70, // module fw version.
++    MD_SND_CMD_INVALID_DATA               = 0x00, // unused
++};
++
++enum {
++    MD_REV_CMD_RAW                  = 0x81,
++    MD_REV_CMD_INDICATOR            = 0x5A,
++    MD_REV_CMD_DEVCTRL              = 0x5B,
++    MD_REV_CMD_DEVCTRL_BAT_LOW      = 0x21, // unused
++    MD_REV_CMD_DEVCTRL_BAT_PWROFF   = 0x22, // unused
++    MD_REV_CMD_DEVCTRL_BAT_NORMAL   = 0x23, // unused
++    MD_REV_CMD_DEVCTRL_PAIRING      = 0x31,
++    MD_REV_CMD_DEVCTRL_CONNECTED    = 0x32,
++    MD_REV_CMD_DEVCTRL_DISCONNECTED = 0x33,
++    MD_REV_CMD_DEVCTRL_DONE         = 0x34, // reserved
++    MD_REV_CMD_DEVCTRL_RECONNECT    = 0x35, // reserved
++    MD_REV_CMD_DEVCTRL_REJECT       = 0x36,
++    MD_REV_CMD_DEVCTRL_UNPAIRED     = 0x37, // reserved
++    MD_REV_CMD_DEVCTRL_MD_WAKEUP    = 0x42, // unused
++    MD_REV_CMD_DEVCTRL_CLS_UART     = 0x43, // unused
++    MD_REV_CMD_BATVOL               = 0x5C,
++    MD_REV_CMD_MD_FW_VERSION        = 0x5D,
++    MD_REV_CMD_HOST_STATE           = 0x60,
++    MD_REV_CMD_HOST_STATE_SUSPEND   = 0x00,
++    MD_REV_CMD_HOST_STATE_RESUME    = 0x01,
++};
++
++void md_init(void);
++void md_main_task(void);
++void md_send_kb(uint8_t *data);
++void md_send_nkro(uint8_t *data);
++void md_send_consumer(uint8_t *data);
++void md_send_system(uint8_t *data);
++void md_send_fn(uint8_t *data);
++void md_send_mouse(uint8_t *data);
++void md_send_devctrl(uint8_t cmd);
++void md_send_manufacturer(char *str, uint8_t len);
++void md_send_product(char *str, uint8_t len);
++void md_send_vpid(uint16_t vid, uint16_t pid);
++void md_send_raw(uint8_t *data, uint8_t length);
++bool md_send_pkt(uint8_t *data, uint32_t len);
++bool md_receive_process_user(uint8_t *pdata, uint8_t len);
++void md_devs_change(uint8_t devs, bool reset);
++bool md_inquire_bat(void);
++uint8_t md_get_version(void);
++uint8_t *md_getp_state(void);
++uint8_t *md_getp_bat(void);
++uint8_t *md_getp_indicator(void);
+diff --git a/keyboards/neo/wireless/smsg.c b/keyboards/neo/wireless/smsg.c
+new file mode 100644
+index 0000000..cfa9571
+--- /dev/null
++++ b/keyboards/neo/wireless/smsg.c
+@@ -0,0 +1,122 @@
++// Copyright 2024 Su (@isuua)
++// SPDX-License-Identifier: GPL-2.0-or-later
++
++#include "smsg.h"
++#include <string.h>
++
++#ifndef SMSG_NUM
++#    define SMSG_NUM 40
++#endif
++
++#ifndef SMSG_PAYLOAD_LEN
++#    define SMSG_PAYLOAD_LEN 50
++#endif
++
++#define SMSG_BUF_SIZE (SMSG_NUM * SMSG_PAYLOAD_LEN)
++#define END_PTR ((smsg_ptr_t *)&smsg_instance.ptr[SMSG_NUM - 1])
++#define FREE_SPACE ((uint32_t)(&smsg_buffer[SMSG_BUF_SIZE - 1] - smsg_instance.buffer))
++
++typedef struct {
++    uint8_t *head;
++    uint8_t *tail;
++} smsg_ptr_t;
++
++typedef struct {
++    smsg_states_t state;
++    smsg_ptr_t *ptr;
++    smsg_ptr_t *in_ptr;
++    smsg_ptr_t *out_ptr;
++    uint8_t *buffer;
++} smsg_t;
++
++static smsg_ptr_t smsg_ptr[SMSG_NUM];
++static uint8_t smsg_buffer[SMSG_BUF_SIZE];
++static smsg_t smsg_instance;
++
++void smsg_init(void) {
++
++    smsg_instance.buffer    = smsg_buffer;
++    smsg_instance.ptr       = smsg_ptr;
++    smsg_instance.ptr->head = smsg_instance.buffer;
++    smsg_instance.ptr->tail = smsg_instance.buffer;
++    smsg_instance.in_ptr    = smsg_instance.ptr;
++    smsg_instance.out_ptr   = smsg_instance.ptr;
++    smsg_instance.state     = smsg_state_free;
++}
++
++bool smsg_push(uint8_t *buf, uint32_t size) {
++
++    if (smsg_instance.in_ptr == END_PTR) {
++        if (smsg_instance.ptr == smsg_instance.out_ptr) {
++            return false;
++        }
++    } else {
++        if ((smsg_instance.in_ptr + 1) == smsg_instance.out_ptr) {
++            return false;
++        }
++    }
++
++    if (FREE_SPACE < SMSG_PAYLOAD_LEN) {
++        smsg_instance.buffer = smsg_buffer;
++    }
++
++    if (size > SMSG_PAYLOAD_LEN) {
++        return false;
++    }
++
++    memcpy(smsg_instance.buffer, buf, size);
++    smsg_instance.in_ptr->head = smsg_instance.buffer;
++    smsg_instance.buffer += size;
++    smsg_instance.in_ptr->tail = smsg_instance.buffer;
++    if (smsg_instance.in_ptr == END_PTR) {
++        smsg_instance.in_ptr = smsg_instance.ptr;
++    } else {
++        smsg_instance.in_ptr++;
++    }
++
++    return true;
++}
++
++uint32_t smsg_peek(uint8_t *buf) {
++
++    if (smsg_instance.out_ptr != smsg_instance.in_ptr) {
++        uint32_t size;
++
++        size = smsg_instance.out_ptr->tail - smsg_instance.out_ptr->head;
++        memcpy(buf, smsg_instance.out_ptr->head, size);
++
++        return size;
++    }
++
++    return 0;
++}
++
++void smsg_pop(void) {
++
++    if (smsg_instance.out_ptr != smsg_instance.in_ptr) {
++        if (smsg_instance.out_ptr == END_PTR) {
++            smsg_instance.out_ptr = smsg_instance.ptr;
++        } else {
++            smsg_instance.out_ptr++;
++        }
++    }
++}
++
++smsg_states_t smsg_get_state(void) {
++
++    return smsg_instance.state;
++}
++
++void smsg_set_state(smsg_states_t state) {
++
++    smsg_instance.state = state;
++}
++
++bool smsg_is_busy(void) {
++
++    if (smsg_instance.out_ptr != smsg_instance.in_ptr) {
++        return true;
++    }
++
++    return false;
++}
+diff --git a/keyboards/neo/wireless/smsg.h b/keyboards/neo/wireless/smsg.h
+new file mode 100644
+index 0000000..ea08630
+--- /dev/null
++++ b/keyboards/neo/wireless/smsg.h
+@@ -0,0 +1,22 @@
++// Copyright 2024 Su (@isuua)
++// SPDX-License-Identifier: GPL-2.0-or-later
++
++#pragma once
++
++#include <stdint.h>
++#include <stdbool.h>
++
++typedef enum {
++    smsg_state_free = 0,
++    smsg_state_busy,
++    smsg_state_retry,
++    smsg_state_replied
++} smsg_states_t;
++
++void smsg_init(void);
++bool smsg_push(uint8_t *buf, uint32_t size);
++uint32_t smsg_peek(uint8_t *buf);
++void smsg_pop(void);
++smsg_states_t smsg_get_state(void);
++void smsg_set_state(smsg_states_t state);
++bool smsg_is_busy(void);
+diff --git a/keyboards/neo/wireless/transport.c b/keyboards/neo/wireless/transport.c
+new file mode 100644
+index 0000000..09bb8d5
+--- /dev/null
++++ b/keyboards/neo/wireless/transport.c
+@@ -0,0 +1,167 @@
++// Copyright 2024 Su (@isuua)
++// SPDX-License-Identifier: GPL-2.0-or-later
++
++#include "quantum.h"
++#include "module.h"
++#include "usb_main.h"
++#include "transport.h"
++
++#ifndef USB_POWER_DOWN_DELAY
++#    define USB_POWER_DOWN_DELAY 3000
++#endif
++
++extern host_driver_t chibios_driver;
++extern host_driver_t wireless_driver;
++
++static transport_t transport = TRANSPORT_USB;
++
++void wls_transport_enable(bool enable) __attribute__((weak));
++void wls_transport_enable(bool enable) {
++
++    if (enable) {
++        if (host_get_driver() != &wireless_driver) {
++            host_set_driver(&wireless_driver);
++            usb_device_state_set_protocol(true); //keyboard_protocol = true; // default with true
++        }
++    } else {
++        if (*md_getp_state() == MD_STATE_CONNECTED) {
++            wireless_driver.send_keyboard(NULL);
++            wireless_driver.send_nkro(NULL);
++        }
++    }
++}
++
++/* Control USB device connection and disconnection by
++ * controlling the power supply of the USB DP pull-up resistor.
++ * Overwrite these two functions. */
++void usb_power_connect(void) __attribute__((weak));
++void usb_power_connect(void) {}
++
++void usb_power_disconnect(void) __attribute__((weak));
++void usb_power_disconnect(void) {}
++
++void usb_transport_enable(bool enable) __attribute__((weak));
++void usb_transport_enable(bool enable) {
++
++    if (enable) {
++        if (host_get_driver() != &chibios_driver) {
++            extern bool last_suspend_state;
++
++            /* This flag is not set to 1 with probability after usb restart */
++            last_suspend_state = true;
++#if !defined(KEEP_USB_CONNECTION_IN_WIRELESS_MODE)
++            usb_power_connect();
++            restart_usb_driver(&USBD1);
++#endif
++            host_set_driver(&chibios_driver);
++        }
++    } else {
++        if (USB_DRIVER.state == USB_ACTIVE) {
++            report_keyboard_t empty_report = {0};
++            report_nkro_t empty_nkro_report = {0};
++            host_keyboard_send(&empty_report);
++            host_nkro_send(&empty_nkro_report);
++        }
++
++#if !defined(KEEP_USB_CONNECTION_IN_WIRELESS_MODE)
++        usbStop(&USBD1);
++        usbDisconnectBus(&USBD1);
++        usb_power_disconnect();
++#endif
++    }
++}
++
++void set_transport(transport_t new_transport) {
++
++    transport = new_transport;
++
++    switch (transport) {
++        case TRANSPORT_USB: {
++            usb_transport_enable(true);
++            wls_transport_enable(false);
++        } break;
++        case TRANSPORT_WLS: {
++            wls_transport_enable(true);
++            usb_transport_enable(false);
++        } break;
++        default:
++            break;
++    }
++}
++
++transport_t get_transport(void) {
++
++    return transport;
++}
++
++void usb_remote_wakeup(void) {
++
++#ifdef USB_REMOTE_USE_QMK
++    if (USB_DRIVER.state == USB_SUSPENDED) {
++        dprintln("suspending keyboard");
++        while (USB_DRIVER.state == USB_SUSPENDED) {
++            /* Do this in the suspended state */
++            suspend_power_down(); // on AVR this deep sleeps for 15ms
++            /* Remote wakeup */
++            if ((USB_DRIVER.status & 2U) && suspend_wakeup_condition()) {
++                usbWakeupHost(&USB_DRIVER);
++#    if USB_SUSPEND_WAKEUP_DELAY > 0
++                // Some hubs, kvm switches, and monitors do
++                // weird things, with USB device state bouncing
++                // around wildly on wakeup, yielding race
++                // conditions that can corrupt the keyboard state.
++                //
++                // Pause for a while to let things settle...
++                wait_ms(USB_SUSPEND_WAKEUP_DELAY);
++#    endif
++            }
++        }
++        /* Woken up */
++    }
++#else
++    static uint32_t suspend_timer = 0x00;
++
++    if ((USB_DRIVER.state == USB_SUSPENDED)) {
++        if (!suspend_timer) suspend_timer = sync_timer_read32();
++        if (sync_timer_elapsed32(suspend_timer) >= USB_POWER_DOWN_DELAY) {
++            suspend_timer = 0x00;
++            suspend_power_down();
++        }
++    } else {
++        suspend_timer = 0x00;
++    }
++#endif
++}
++
++#ifndef USB_REMOTE_USE_QMK
++void usb_remote_host(void) {
++
++    if (USB_DRIVER.state == USB_SUSPENDED) {
++        if ((USB_DRIVER.status & 2U) && suspend_wakeup_condition()) {
++            usbWakeupHost(&USB_DRIVER);
++#    if USB_SUSPEND_WAKEUP_DELAY > 0
++            // Some hubs, kvm switches, and monitors do
++            // weird things, with USB device state bouncing
++            // around wildly on wakeup, yielding race
++            // conditions that can corrupt the keyboard state.
++            //
++            // Pause for a while to let things settle...
++            wait_ms(USB_SUSPEND_WAKEUP_DELAY);
++#    endif
++        }
++#    if !defined(USB_REMOTE_USE_QMK) && USB_POWER_DOWN_DELAY
++        suspend_wakeup_init();
++#    endif
++    }
++}
++
++bool process_action_kb(keyrecord_t *record) {
++
++    (void)record;
++    if (get_transport() == TRANSPORT_USB){
++        usb_remote_host();
++    }
++
++    return true;
++}
++#endif
+diff --git a/keyboards/neo/wireless/transport.h b/keyboards/neo/wireless/transport.h
+new file mode 100644
+index 0000000..e6ff663
+--- /dev/null
++++ b/keyboards/neo/wireless/transport.h
+@@ -0,0 +1,18 @@
++// Copyright 2024 Su (@isuua)
++// SPDX-License-Identifier: GPL-2.0-or-later
++
++#pragma once
++
++typedef enum {
++    TRANSPORT_NONE,
++    TRANSPORT_USB,
++    TRANSPORT_WLS,
++} transport_t;
++
++void wls_transport_enable(bool enable);
++void usb_transport_enable(bool enable);
++void set_transport(transport_t new_transport);
++transport_t get_transport(void);
++void usb_power_connect(void);
++void usb_power_disconnect(void);
++void usb_remote_wakeup(void);
+diff --git a/keyboards/neo/wireless/wireless.c b/keyboards/neo/wireless/wireless.c
+new file mode 100644
+index 0000000..5358b9e
+--- /dev/null
++++ b/keyboards/neo/wireless/wireless.c
+@@ -0,0 +1,266 @@
++
++// Copyright 2024 Su (@isuua)
++// SPDX-License-Identifier: GPL-2.0-or-later
++
++#include "quantum.h"
++#include "wireless.h"
++
++#ifndef WLS_INQUIRY_BAT_TIME
++#    define WLS_INQUIRY_BAT_TIME 3000
++#endif
++
++#ifndef WLS_KEYBOARD_REPORT_KEYS
++#    define WLS_KEYBOARD_REPORT_KEYS KEYBOARD_REPORT_KEYS
++#endif
++
++static uint8_t wls_devs = DEVS_USB;
++
++void last_matrix_activity_trigger(void);
++
++uint8_t wireless_keyboard_leds(void);
++void wireless_send_keyboard(report_keyboard_t *report);
++void wireless_send_nkro(report_nkro_t *report);
++void wireless_send_mouse(report_mouse_t *report);
++void wireless_send_extra(report_extra_t *report);
++
++host_driver_t wireless_driver = {
++    .keyboard_leds = wireless_keyboard_leds,
++    .send_keyboard = wireless_send_keyboard,
++    .send_nkro     = wireless_send_nkro,
++    .send_mouse    = wireless_send_mouse,
++    .send_extra    = wireless_send_extra,
++};
++
++void wireless_init(void) {
++
++    md_init();
++}
++
++uint8_t wireless_keyboard_leds(void) __attribute__((weak));
++uint8_t wireless_keyboard_leds(void) {
++
++    if (*md_getp_state() == MD_STATE_CONNECTED) {
++        return *md_getp_indicator();
++    }
++
++    return 0;
++}
++
++void wireless_send_keyboard(report_keyboard_t *report) __attribute__((weak));
++void wireless_send_keyboard(report_keyboard_t *report) {
++    uint8_t wls_report_kb[MD_SND_CMD_KB_LEN] = {0};
++
++    if (*md_getp_state() != MD_STATE_CONNECTED) {
++        wireless_devs_change(wls_devs, wls_devs, false);
++        return;
++    }
++
++    _Static_assert((MD_SND_CMD_KB_LEN) - (WLS_KEYBOARD_REPORT_KEYS) >= 2, "WLS_KEYBOARD_REPORT_KEYS cannot be greater than MD_SND_CMD_KB_LEN - 2.");
++
++    if (report != NULL) {
++        memcpy(wls_report_kb, (uint8_t *)&report->mods, WLS_KEYBOARD_REPORT_KEYS + 2);
++    }
++
++    md_send_kb(wls_report_kb);
++}
++
++void wireless_send_nkro(report_nkro_t *report) __attribute__((weak));
++void wireless_send_nkro(report_nkro_t *report) {
++    static report_keyboard_t temp_report_keyboard = {0};
++    uint8_t wls_report_nkro[MD_SND_CMD_NKRO_LEN]  = {0};
++
++#ifdef NKRO_ENABLE
++    if (*md_getp_state() != MD_STATE_CONNECTED) {
++        wireless_devs_change(wls_devs, wls_devs, false);
++        return;
++    }
++
++    if (report != NULL) {
++        report_nkro_t temp_report_nkro = *report;
++        uint8_t key_count              = 0;
++
++        temp_report_keyboard.mods = temp_report_nkro.mods;
++        for (uint8_t i = 0; i < NKRO_REPORT_BITS; i++) {
++            key_count += __builtin_popcount(temp_report_nkro.bits[i]);
++        }
++
++        // find key up and del it.
++        uint8_t nkro_keys = key_count;
++        for (uint8_t i = 0; i < WLS_KEYBOARD_REPORT_KEYS && temp_report_keyboard.keys[i]; i++) {
++            report_nkro_t found_report_nkro;
++            uint8_t usageid = 0x00;
++            uint8_t n;
++
++            found_report_nkro = temp_report_nkro;
++
++            for (uint8_t c = 0; c < nkro_keys; c++) {
++                for (n = 0; n < NKRO_REPORT_BITS && !found_report_nkro.bits[n]; n++) {}
++                usageid = (n << 3) | biton(found_report_nkro.bits[n]);
++                del_key_bit(&found_report_nkro, usageid);
++                if (usageid == temp_report_keyboard.keys[i]) {
++                    del_key_bit(&temp_report_nkro, usageid);
++                    nkro_keys--;
++                    break;
++                }
++            }
++
++            if (usageid != temp_report_keyboard.keys[i]) {
++                temp_report_keyboard.keys[i] = 0x00;
++            }
++        }
++
++        /*
++         * Use NKRO for sending when more than 6 keys are pressed
++         * to solve the issue of the lack of a protocol flag in wireless mode.
++         */
++
++        temp_report_nkro = *report;
++
++        for (uint8_t i = 0; i < key_count; i++) {
++            uint8_t usageid;
++            uint8_t idx, n = 0;
++
++            for (n = 0; n < NKRO_REPORT_BITS && !temp_report_nkro.bits[n]; n++) {}
++            usageid = (n << 3) | biton(temp_report_nkro.bits[n]);
++            del_key_bit(&temp_report_nkro, usageid);
++
++            for (idx = 0; idx < WLS_KEYBOARD_REPORT_KEYS; idx++) {
++                if (temp_report_keyboard.keys[idx] == usageid) {
++                    break;
++                }
++                if (temp_report_keyboard.keys[idx] == 0x00) {
++                    temp_report_keyboard.keys[idx] = usageid;
++                    break;
++                }
++            }
++
++            if (idx == WLS_KEYBOARD_REPORT_KEYS && (usageid < (MD_SND_CMD_NKRO_LEN * 8))) {
++                wls_report_nkro[usageid / 8] |= 0x01 << (usageid % 8);
++            }
++        }
++    } else {
++        memset(&temp_report_keyboard, 0, sizeof(temp_report_keyboard));
++    }
++#endif
++
++    wireless_driver.send_keyboard(&temp_report_keyboard);
++    md_send_nkro(wls_report_nkro);
++}
++
++void wireless_send_mouse(report_mouse_t *report) __attribute__((weak));
++void wireless_send_mouse(report_mouse_t *report) {
++    typedef struct {
++        uint8_t buttons;
++        int8_t x;
++        int8_t y;
++        int8_t v;
++        int8_t h;
++    } __attribute__((packed)) wls_report_mouse_t;
++
++    wls_report_mouse_t wls_report_mouse = {0};
++
++    if (*md_getp_state() != MD_STATE_CONNECTED) {
++        wireless_devs_change(wls_devs, wls_devs, false);
++        return;
++    }
++
++    if (report != NULL) {
++        wls_report_mouse.buttons = report->buttons;
++        wls_report_mouse.x       = report->x;
++        wls_report_mouse.y       = report->y;
++        wls_report_mouse.v       = report->v;
++        wls_report_mouse.h       = report->h;
++    }
++
++    md_send_mouse((uint8_t *)&wls_report_mouse);
++}
++
++void wireless_send_extra(report_extra_t *report) __attribute__((weak));
++void wireless_send_extra(report_extra_t *report) {
++    uint16_t usage = 0;
++
++    if (*md_getp_state() != MD_STATE_CONNECTED) {
++        wireless_devs_change(wls_devs, wls_devs, false);
++        return;
++    }
++
++    if (report != NULL) {
++        usage = report->usage;
++
++        switch (usage) {
++            case 0x81:
++            case 0x82:
++            case 0x83: { // system usage
++                usage = 0x01 << (usage - 0x81);
++                md_send_system((uint8_t *)&usage);
++            } break;
++            default: {
++                md_send_consumer((uint8_t *)&usage);
++            } break;
++        }
++    }
++}
++
++void wireless_devs_change_user(uint8_t old_devs, uint8_t new_devs, bool reset) __attribute__((weak));
++void wireless_devs_change_user(uint8_t old_devs, uint8_t new_devs, bool reset) {}
++
++void wireless_devs_change_kb(uint8_t old_devs, uint8_t new_devs, bool reset) __attribute__((weak));
++void wireless_devs_change_kb(uint8_t old_devs, uint8_t new_devs, bool reset) {}
++
++void wireless_devs_change(uint8_t old_devs, uint8_t new_devs, bool reset) {
++    bool changed = (old_devs == DEVS_USB) ? (new_devs != DEVS_USB) : (new_devs == DEVS_USB);
++
++    if (changed) {
++        set_transport((new_devs != DEVS_USB) ? TRANSPORT_WLS : TRANSPORT_USB);
++    }
++
++    if ((wls_devs != new_devs) || reset) {
++        *md_getp_state()     = MD_STATE_DISCONNECTED;
++        *md_getp_indicator() = 0;
++    }
++
++    wls_devs = new_devs;
++    last_matrix_activity_trigger();
++
++    md_devs_change(new_devs, reset);
++    wireless_devs_change_kb(old_devs, new_devs, reset);
++    wireless_devs_change_user(old_devs, new_devs, reset);
++}
++
++uint8_t wireless_get_current_devs(void) {
++    return wls_devs;
++}
++
++void wireless_pre_task(void) __attribute__((weak));
++void wireless_pre_task(void) {}
++
++void wireless_post_task(void) __attribute__((weak));
++void wireless_post_task(void) {}
++
++void wireless_task(void) {
++
++    wireless_pre_task();
++    lpwr_task();
++    md_main_task();
++    wireless_post_task();
++
++    /* usb_remote_wakeup() should be invoked last so that we have chance
++     * to switch to wireless after start-up when usb is not connected
++     */
++    if (get_transport() == TRANSPORT_USB) {
++        usb_remote_wakeup();
++    } else if (lpwr_get_state() == LPWR_NORMAL) {
++        static uint32_t inqtimer = 0x00;
++
++        if (sync_timer_elapsed32(inqtimer) >= (WLS_INQUIRY_BAT_TIME)) {
++            if (md_inquire_bat()) {
++                inqtimer = sync_timer_read32();
++            }
++        }
++    }
++}
++
++void housekeeping_task_kb(void) {
++
++    wireless_task();
++}
+diff --git a/keyboards/neo/wireless/wireless.h b/keyboards/neo/wireless/wireless.h
+new file mode 100644
+index 0000000..683347b
+--- /dev/null
++++ b/keyboards/neo/wireless/wireless.h
+@@ -0,0 +1,14 @@
++// Copyright 2024 Su (@isuua)
++// SPDX-License-Identifier: GPL-2.0-or-later
++
++#pragma once
++
++#include "transport.h"
++#include "lowpower.h"
++#include "module.h"
++
++void wireless_init(void);
++void wireless_devs_change(uint8_t old_devs, uint8_t new_devs, bool reset);
++uint8_t wireless_get_current_devs(void);
++void wireless_pre_task(void);
++void wireless_post_task(void);
+diff --git a/keyboards/neo/wireless/wireless.mk b/keyboards/neo/wireless/wireless.mk
+new file mode 100644
+index 0000000..5076e54
+--- /dev/null
++++ b/keyboards/neo/wireless/wireless.mk
+@@ -0,0 +1,26 @@
++WIRELESS_ENABLE ?= yes
++WIRELESS_DIR = $(TOP_DIR)/keyboards/neo/wireless
++
++ifeq ($(strip $(WIRELESS_ENABLE)), yes)
++    OPT_DEFS += -DWIRELESS_ENABLE -DNO_USB_STARTUP_CHECK
++
++    OPT_DEFS += -include $(WIRELESS_DIR)/md_raw.h
++
++    UART_DRIVER_REQUIRED ?= yes
++    WIRELESS_LPWR_STOP_ENABLE ?= yes
++
++    VPATH += $(WIRELESS_DIR)
++
++    SRC += \
++        $(WIRELESS_DIR)/wireless.c \
++        $(WIRELESS_DIR)/transport.c \
++        $(WIRELESS_DIR)/lowpower.c \
++        $(WIRELESS_DIR)/md_raw.c \
++        $(WIRELESS_DIR)/smsg.c \
++        $(WIRELESS_DIR)/module.c
++
++    ifeq ($(strip $(WIRELESS_LPWR_STOP_ENABLE)), yes)
++        OPT_DEFS += -DWIRELESS_LPWR_STOP_ENABLE
++        SRC += $(WIRELESS_DIR)/lpwr_wb32.c
++    endif
++endif

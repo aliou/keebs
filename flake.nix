@@ -14,8 +14,9 @@
 # Build all targets (qmk.json):  qmk userspace-compile
 # Flash Mirage:                  qmk flash -kb mode/m256wh -km mirage
 #   (put board in DFU: hold MO(1)+grave, or hold MO(1)+B)
-# Flash NEO65:                   qmk flash -kb neo/neo65_wired_for_trimode -km via
-#   (put board in DFU: hold B while plugging in)
+# Flash NEO65:                   qmk flash -kb neo/neo65_trimode -km default
+#   (put board in DFU: hold B while plugging in -- WB32 DFU, use
+#    wb32-dfu-updater_cli, NOT dfu-util; see justfile)
 {
   description = "aliou's QMK external userspace";
 
@@ -44,32 +45,39 @@
         # Apply local patches on top of the fetched firmware. Patches live in
         # ./patches/ and adapt upstream QMK so external-userspace builds work
         # against this read-only firmware copy (no fork needed).
+        #
+        #   0001-tolerate-readonly-firmware-root-copy.patch
+        #       makes firmware-root cp steps tolerant of the read-only nix store.
+        #   0002-add-edthu-wireless-support.patch
+        #       vendored from edthu/qmk_firmware#wireless (see
+        #       vendor/edthu-wireless/README.md). Adds the WB32<->CH582F UART
+        #       transport stack + the NEO65 tri-mode keyboard. Purely additive
+        #       (all new files), so it can't bitrot against upstream changes.
+        #       Regenerate via `scripts/regen-wireless-patch.sh`.
         qmkFirmwarePatched = pkgs.applyPatches {
           src = qmkFirmwareSrc;
-          patches = [ ./patches/0001-tolerate-readonly-firmware-root-copy.patch ];
+          patches = [
+            ./patches/0001-tolerate-readonly-firmware-root-copy.patch
+            ./patches/0002-add-edthu-wireless-support.patch
+          ];
         };
 
-        # Custom keyboards we maintain that are NOT in upstream QMK (no fork,
-        # not part of external-userspace -- see note below). We layer them onto
-        # the patched firmware at build time so QMK's Python + make lookups
-        # (which run with cwd = firmware, due to script_qmk.py's chdir) find
-        # them as ordinary firmware keyboards: is_keyboard(), find_info_json(),
-        # rules_mk(), make KEYBOARD_PATH_*, list-keyboards, etc. all work
-        # unmodified.
-        #
-        # Entry = path under our repo's keyboards/ that has a keyboard.json.
-        customKeyboards = [ "neo/neo65" ];
-
+        # Custom keyboards we maintain that are NOT in upstream QMK go through
+        # patches/ (see vendor/ and scripts/regen-wireless-patch.sh), not this
+        # overlay -- that path is reserved for keymap-level overlays handled by
+        # QMK's external-userspace machinery, and the NEO65 is now a real
+        # firmware keyboard via 0002-add-edthu-wireless-support.patch.
         qmkFirmware = pkgs.runCommand "qmk-firmware-overlayed" { src = qmkFirmwarePatched; } ''
           cp -r "$src" "$out"
           chmod -R u+w "$out"
-          ${pkgs.lib.concatStringsSep "\n" (map (kb: ''
-            mkdir -p "$out/keyboards/${pkgs.lib.dirOf kb}"
-            cp -r "${./keyboards}/${kb}" "$out/keyboards/${kb}"
-          '') customKeyboards)}
         '';
       in
       {
+        # Exposed so scripts/regen-wireless-patch.sh can resolve a pristine
+        # checkout at the pinned rev without a git clone:
+        #   nix build .#qmkFirmwareSrc --no-link --print-out-paths
+        packages.qmkFirmwareSrc = qmkFirmwareSrc;
+
         devShells.default = pkgs.mkShell {
           packages = with pkgs; [
             qmk                       # QMK CLI (python, with deps)
