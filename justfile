@@ -26,12 +26,12 @@ mirage-flash:
     qmk flash -kb mode/m256wh -km mirage
 
 neo:
-    qmk compile -kb neo/neo65_trimode -km default
+    qmk compile -kb neo/neo65_trimode -km aliou
 
 # Flash the NEO65. Enter DFU first: hold B while plugging in. WB32 DFU;
 # uses wb32-dfu-updater_cli (not dfu-util).
 neo-flash:
-    wb32-dfu-updater_cli -D neo_neo65_trimode_default.bin -s 0x08000000 -R -w
+    wb32-dfu-updater_cli -D neo_neo65_trimode_aliou.bin -s 0x08000000 -R -w
 
 # --- housekeeping ---------------------------------------------------------
 

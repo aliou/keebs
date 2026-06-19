@@ -2,7 +2,7 @@
     "userspace_version": "1.1",
     "build_targets": [
         ["mode/m256wh", "mirage"],
-        ["neo/neo65_trimode", "default"],
+        ["neo/neo65_trimode", "aliou"],
         ["cannonkeys/db60/hotswap", "milky_neko"],
         ["dztech/dz60rgb/v2_1", "silent_tofu"]
     ]
