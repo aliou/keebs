@@ -1,0 +1,9 @@
+# Build outputs (QMK intermediates + final binaries land here per BUILD_DIR
+# and QMK_USERSPACE; both pinned to $PWD by the flake devShell).
+/.build/
+/.config/
+/*.bin
+/*.hex
+/*.uf2
+# nix result symlinks
+/result

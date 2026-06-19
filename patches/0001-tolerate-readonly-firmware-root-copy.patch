@@ -1,0 +1,47 @@
+diff --git a/builddefs/common_rules.mk b/builddefs/common_rules.mk
+index 282cc6c..c932ca0 100644
+--- a/builddefs/common_rules.mk
++++ b/builddefs/common_rules.mk
+@@ -189,7 +189,7 @@ hex: $(BUILD_DIR)/$(TARGET).hex
+ uf2: $(BUILD_DIR)/$(TARGET).uf2
+ cpfirmware_qmk: $(FIRMWARE_FORMAT)
+ 	$(SILENT) || printf "Copying $(TARGET).$(FIRMWARE_FORMAT) to qmk_firmware folder" | $(AWK_CMD)
+-	$(COPY) $(BUILD_DIR)/$(TARGET).$(FIRMWARE_FORMAT) $(TARGET).$(FIRMWARE_FORMAT) && $(PRINT_OK)
++	-$(COPY) $(BUILD_DIR)/$(TARGET).$(FIRMWARE_FORMAT) $(TARGET).$(FIRMWARE_FORMAT) && $(PRINT_OK)
+ eep: $(BUILD_DIR)/$(TARGET).eep
+ lss: $(BUILD_DIR)/$(TARGET).lss
+ sym: $(BUILD_DIR)/$(TARGET).sym
+@@ -261,8 +261,8 @@ gccversion :
+ 	if [ ! -z "$(DFU_SUFFIX_ARGS)" ]; then \
+ 		$(DFU_SUFFIX) $(DFU_SUFFIX_ARGS) -a $(BUILD_DIR)/$(TARGET).bin 1>/dev/null ;\
+ 	fi
+-	#$(SILENT) || printf "$(MSG_EXECUTING) '$(DFU_SUFFIX) $(DFU_SUFFIX_ARGS) -a $(BUILD_DIR)/$(TARGET).bin 1>/dev/null':\n" ;\
+-	$(COPY) $(BUILD_DIR)/$(TARGET).bin $(TARGET).bin;
++	#$(SILENT) || printf "$(MSG_EXECUTING) '$(DFU_SUFFIX) $(DFU_SUFFIX_ARGS) -a $(BUILD_DIR)/$(TARGET).bin 1>/dev/null':\n"
++	-$(COPY) $(BUILD_DIR)/$(TARGET).bin $(TARGET).bin;
+ 
+ BEGIN = gccversion sizebefore
+ 
+diff --git a/platforms/avr/platform.mk b/platforms/avr/platform.mk
+index f018745..606bcdb 100644
+--- a/platforms/avr/platform.mk
++++ b/platforms/avr/platform.mk
+@@ -143,7 +143,7 @@ ifeq ($(BOOTLOADER),lufa-ms)
+ else
+ 	$(OBJCOPY) -Iihex -Obinary $(BUILD_DIR)/$(TARGET).hex $(BUILD_DIR)/$(TARGET).bin
+ endif
+-	$(COPY) $(BUILD_DIR)/$(TARGET).bin $(TARGET).bin;
++	-$(COPY) $(BUILD_DIR)/$(TARGET).bin $(TARGET).bin;
+ 
+ # copy bin to FLASH.bin
+ flashbin: bin
+diff --git a/platforms/chibios/platform.mk b/platforms/chibios/platform.mk
+index b5cbec4..b79097f 100644
+--- a/platforms/chibios/platform.mk
++++ b/platforms/chibios/platform.mk
+@@ -508,4 +508,4 @@ DEBUG = gdb
+ EXTRALIBDIRS = $(RULESPATH)/ld
+ 
+ bin: $(BUILD_DIR)/$(TARGET).bin sizeafter
+-	$(COPY) $(BUILD_DIR)/$(TARGET).bin $(TARGET).bin;
++	-$(COPY) $(BUILD_DIR)/$(TARGET).bin $(TARGET).bin;

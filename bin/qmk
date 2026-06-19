@@ -1,0 +1,71 @@
+#!/usr/bin/env bash
+# qmk wrapper for aliou/keebs.
+#
+# QMK's build system assumes the firmware tree is writable: it writes object
+# files to <firmware>/.build and copies the final .bin into <firmware>/.
+# Here the firmware is a read-only nix-store path, so both writes fail.
+#
+# This wrapper:
+#   1. Forces BUILD_DIR to $PWD/.build (writeable) via `qmk -e BUILD_DIR=...`.
+#   2. After a successful build/flash, copies the produced firmware from
+#      .build/ to the repo root (where QMK would normally have put it).
+#
+# The QMK_HOME / QMK_USERSPACE env vars (set by the flake devShell) are
+# authoritative; we deleted the global qmk.ini so there's no override.
+set -euo pipefail
+
+REPO_ROOT="$(cd "$(dirname "${BASH_SOURCE[0]}")/.." && pwd)"
+
+# Resolve the REAL qmk binary, skipping our own bin/ dir on PATH so we don't
+# recurse into this wrapper.
+REAL_QMK=""
+IFS=':' read -ra _dirs <<< "$PATH"
+for _d in "${_dirs[@]}"; do
+  [ "$_d" = "$REPO_ROOT/bin" ] && continue
+  if [ -x "$_d/qmk" ]; then REAL_QMK="$_d/qmk"; break; fi
+done
+if [ -z "$REAL_QMK" ]; then
+  echo "qmk wrapper: could not locate real qmk binary on PATH" >&2
+  exit 127
+fi
+
+# The env vars below are exported by the flake devShell's shellHook. If you
+# invoke this wrapper outside the devShell, fall back to sane values.
+: "${QMK_HOME:?QMK_HOME must be set (run via `nix develop` or direnv)}"
+: "${QMK_USERSPACE:=$REPO_ROOT}"
+: "${BUILD_DIR:=$REPO_ROOT/.build}"
+export QMK_HOME QMK_USERSPACE BUILD_DIR
+
+run_qmk() {
+  # Inject make vars on compile/flash/userspace-compile calls:
+  #   BUILD_DIR -> writeable, so the read-only nix-store firmware isn't touched.
+  #   SKIP_GIT  -> 1, so QMK skips `git describe` against the read-only
+  #                firmware (no .git there) and emits no git warnings. Any
+  #                warning that then surfaces is a real one.
+  case "${1:-}" in
+    compile|flash|userspace-compile)
+      "$REAL_QMK" "$@" -e "BUILD_DIR=$BUILD_DIR" -e "SKIP_GIT=1"
+      ;;
+    *)
+      "$REAL_QMK" "$@"
+      ;;
+  esac
+}
+
+# Run, then surface the built firmware to the repo root for convenience.
+run_qmk "$@"
+rc=$?
+
+# Copy any freshly-built firmware to the repo root.
+if [ "$rc" -eq 0 ] && [ -d "$BUILD_DIR" ]; then
+  for f in "$BUILD_DIR"/*.bin "$BUILD_DIR"/*.hex "$BUILD_DIR"/*.uf2; do
+    [ -e "$f" ] || continue
+    name="$(basename "$f")"
+    if [ ! -e "$REPO_ROOT/$name" ] || ! cmp -s "$f" "$REPO_ROOT/$name"; then
+      cp "$f" "$REPO_ROOT/$name" && echo "Copied $name to $REPO_ROOT"
+    fi
+  done
+fi
+
+exit $rc
+

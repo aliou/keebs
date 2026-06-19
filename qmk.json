@@ -1,0 +1,9 @@
+{
+    "userspace_version": "1.1",
+    "build_targets": [
+        ["mode/m256wh", "mirage"],
+        ["neo/neo65", "via"],
+        ["cannonkeys/db60/hotswap", "milky_neko"],
+        ["dztech/dz60rgb/v2_1", "silent_tofu"]
+    ]
+}
