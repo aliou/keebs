@@ -17,3 +17,7 @@
 // Adds delay after USB resume to allow host controller to stabilize.
 // See: https://github.com/qmk/qmk_firmware/issues/17876
 #define USB_SUSPEND_WAKEUP_DELAY 200
+
+// Turn the underglow off while the host is suspended (Mac asleep), and restore
+// it on resume. Keeps the board dark when the Mac sleeps.
+#define RGBLIGHT_SLEEP

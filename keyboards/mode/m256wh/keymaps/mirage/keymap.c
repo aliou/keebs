@@ -21,3 +21,73 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
 };
 
 // vim:foldmethod=syntax tw=0 shiftwidth=2
+
+// ---------------------------------------------------------------------------
+// Underglow: a 30-LED WS2812 chain (pin B15). We take it over manually instead
+// of using the built-in animation engine, so a single LED can be lit on the
+// base layer and the whole strip flooded on the FN layer.
+//
+//   layer 0 (base): only the top-left LED (chain index 0 -- best assumption,
+//                   the strip's physical order isn't documented) lit, cycling
+//                   hue endlessly. Everything else off.
+//   layer 1 (FN):   all LEDs white to signal the DFU/reset layer. There is no
+//                   addressable LED under the B key (it's an underglow strip,
+//                   not per-key RGB), so the B-key highlight the original spec
+//                   asked for isn't possible here; solid white flags the layer.
+//
+// Resistance to overwrites: we set the mode to RGBLIGHT_MODE_STATIC_LIGHT,
+// under which the rgblight timer task runs rgblight_effect_dummy (a no-op), so
+// our manual writes persist between ticks.
+// ---------------------------------------------------------------------------
+
+#define MIRAGE_LED_COUNT 30
+
+// Brightness (0-255 per channel).
+#define MIRAGE_VAL_LAYER0 255 // single LED
+#define MIRAGE_VAL_LAYER1 255 // full white flood
+
+static uint8_t  mirage_hue      = 0;
+static uint16_t mirage_last     = 0;
+static uint8_t  mirage_prev_top = 0xFF;
+
+static void mirage_render(uint8_t top_layer) {
+    if (top_layer == 1) {
+        // FN/DFU layer: flood white.
+        rgblight_setrgb(MIRAGE_VAL_LAYER1, MIRAGE_VAL_LAYER1, MIRAGE_VAL_LAYER1);
+    } else {
+        // Base layer: everything off, then light only the top-left LED with
+        // the current cycling hue.
+        rgblight_setrgb(0, 0, 0);
+        rgb_t c = hsv_to_rgb((hsv_t){mirage_hue, 255, MIRAGE_VAL_LAYER0});
+        rgblight_setrgb_at(c.r, c.g, c.b, 0);
+    }
+}
+
+void keyboard_post_init_user(void) {
+    // No animation engine -- we drive the strip directly.
+    rgblight_enable_noeeprom();
+    rgblight_mode_noeeprom(RGBLIGHT_MODE_STATIC_LIGHT);
+    mirage_prev_top = get_highest_layer(layer_state | default_layer_state);
+    mirage_render(mirage_prev_top);
+}
+
+void housekeeping_task_user(void) {
+    uint8_t top = get_highest_layer(layer_state | default_layer_state);
+
+    // Redraw immediately on a layer change, otherwise advance the hue / repaint
+    // at ~30 fps to keep the single-LED rainbow smooth without flooding the
+    // WS2812 bus every loop iteration.
+    if (top != mirage_prev_top) {
+        mirage_render(top);
+        mirage_prev_top = top;
+        return;
+    }
+
+    if (timer_elapsed(mirage_last) > 33) {
+        mirage_last = timer_read();
+        if (top == 0) {
+            mirage_hue += 8; // wraps uint8_t -> endless color cycle
+            mirage_render(top);
+        }
+    }
+}

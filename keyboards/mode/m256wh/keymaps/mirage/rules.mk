@@ -2,7 +2,7 @@
 # enable it to test the PCB.
 VIA_ENABLE = no
 
-# Disable all of the lights
-# Cop lights, flashlights, spotlights
-# Strobe lights, street lights (All of the lights, all of the lights)
-RGBLIGHT_ENABLE = no
+# 30x WS2812 underglow chain (pin B15, defined in the keyboard's keyboard.json).
+# We drive it manually from keymap.c (no built-in animation) so we can light a
+# single LED on the base layer and flood white on the FN/DFU layer.
+RGBLIGHT_ENABLE = yes
