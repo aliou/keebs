@@ -85,7 +85,6 @@
             dfu-util                  # STM32 DFU flash (Mirage M256W-H)
             wb32-dfu-updater          # WB32 DFU flash (NEO65) -> wb32-dfu-updater_cli
             gnumake                   # build driver
-            git                       # qmk uses git for version info
             python3                   # some qmk subcommands need it
           ];
 
