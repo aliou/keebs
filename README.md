@@ -17,8 +17,7 @@ Everything is reproducible and self-contained to this directory:
 |---|---|---|---|
 | Mode Mirage (M256W-H) | STM32F401 | stm32-dfu | `mode/m256wh:mirage` |
 | NEO65 tri-mode | WB32FQ95 + CH582F | wb32-dfu | `neo/neo65_trimode:aliou` |
-| CannonKeys DB60 hotswap (Milky Neko) | STM32F303 | stm32-dfu | `cannonkeys/db60/hotswap:milky_neko` |
-| DZTech DZ60RGB v2.1 (Silent Tofu) | STM32F303 | stm32-dfu | `dztech/dz60rgb/v2_1:silent_tofu` |
+
 
 The NEO65 is not in upstream QMK. Its tri-mode support (WB32 main MCU talking
 to a CH582F BLE/2.4G radio over UART) comes from `edthu/qmk_firmware#wireless`,
@@ -32,6 +31,7 @@ flake.nix       -- fetches pinned QMK + applies local patches; provides devShell
 qmk.json        -- external-userspace build targets (one per keyboard/keymap).
 bin/qmk          -- wrapper: injects BUILD_DIR=$PWD/.build + SKIP_GIT=1.
 keyboards/       -- our overlay. Keymaps at keyboards/<vendor>/<kb>/keymaps/<km>/.
+                   _archive/ holds retired keymaps (no longer in qmk.json).
 patches/         -- 0001: read-only tolerance. 0002: edthu wireless (NEO65).
 vendor/          -- edthu-wireless source (regen base) + stock qwertykeys binaries.
 scripts/         -- regen-wireless-patch.sh, ble-scan.swift/.py.
@@ -134,6 +134,16 @@ upstream lines change. Patch 0001 (read-only tolerance) might fail to apply;
 patch 0002 (edthu wireless) is purely additive so it can't bitrot, but if you
 pull a newer wireless commit from edthu, regenerate with
 `scripts/regen-wireless-patch.sh`.
+
+## Archived keyboards
+
+Retired keymaps live in `keyboards/_archive/` and are excluded from `qmk.json`
+build targets:
+
+| Keyboard | MCU | Bootloader | Build target |
+|---|---|---|---|
+| CannonKeys DB60 hotswap (Milky Neko) | STM32F303 | stm32-dfu | `cannonkeys/db60/hotswap:milky_neko` |
+| DZTech DZ60RGB v2.1 (Silent Tofu) | STM32F303 | stm32-dfu | `dztech/dz60rgb/v2_1:silent_tofu` |
 
 ## Notable config: eager debounce
 
