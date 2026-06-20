@@ -45,11 +45,25 @@ qmk compile -kb mode/m256wh -km mirage   # direct
 
 ## Flashing
 
+The easiest way to flash is with the auto-flash scripts (or the `just`
+recipes that wrap them). They compile, poll for the DFU device, and flash
+in one step. The manual tool commands are still documented below for
+reference or troubleshooting.
+
 ### Mirage (STM32F401, stm32-dfu)
 
 Enter DFU: hold `MO(1)` (bottom row, right of Space) + tap grave (top-left)
-or B -- both are `QK_BOOT` on layer 1. Then `just mirage-flash`
-(== `qmk flash -kb mode/m256wh -km mirage`, uses dfu-util).
+or B -- both are `QK_BOOT` on layer 1. Then:
+
+```
+just mirage-flash-auto     # compile + wait for DFU + flash
+```
+
+Or, if you prefer to do it manually:
+
+```
+just mirage-flash          # qmk flash -kb mode/m256wh -km mirage
+```
 
 ### NEO65 (WB32FQ95 + CH582F, wb32-dfu)
 
@@ -60,12 +74,19 @@ DFU entry -- two cases:
   release. The CH582F radio must be unpowered (battery off) at entry or the
   WB32 won't jump to its bootloader.
 
-Verify: `wb32-dfu-updater_cli -l` shows `Found DFU: [342d:dfa0]`.
+Once in DFU (verify with `wb32-dfu-updater_cli -l` -- should show
+`Found DFU: [342d:dfa0]`):
 
-Flash:
 ```
-just neo-flash
-# or: wb32-dfu-updater_cli -t -s 0x08000000 -D neo_neo65_trimode_aliou.bin
+just neo-flash-auto        # compile + wait for DFU + flash + reset
+```
+
+Or, if you prefer to do it manually:
+
+```
+just neo-flash             # same as below, wrapped in just
+# or:
+wb32-dfu-updater_cli -t -s 0x08000000 -D neo_neo65_trimode_aliou.bin -R
 ```
 
 **Critical**: `-t` (toolbox mode) is required. Without it the WB32's flash
