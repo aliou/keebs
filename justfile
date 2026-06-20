@@ -28,10 +28,20 @@ mirage-flash:
 neo:
     qmk compile -kb neo/neo65_trimode -km aliou
 
-# Flash the NEO65. Enter DFU first: hold B while plugging in. WB32 DFU;
-# uses wb32-dfu-updater_cli (not dfu-util).
+# Flash the NEO65 tri-mode. Enter DFU first:
+#   1. Battery switch (under Caps Lock) -- OFF
+#   2. Unplug USB-C
+#   3. Hold Fn+Esc, plug in USB-C, hold ~3s, release.
+# Stock firmware binds no QK_BOOT, and Bootmagic plug-in combos (Esc /
+# Space+B) do NOT enter DFU on this board -- only the Fn+Esc+physical-switch
+# sequence above does. The CH582F radio must be unpowered (battery off) at
+# entry or the WB32 won't jump to the bootloader.
+#
+# `-t` (toolbox mode) is critical: without it, the WB32's default flash read
+# protection blocks the write and the tool silently no-ops (prints only
+# "Reset device completed!" with no "Writing ... OK").
 neo-flash:
-    wb32-dfu-updater_cli -D neo_neo65_trimode_aliou.bin -s 0x08000000 -R -w
+    wb32-dfu-updater_cli -t -s 0x08000000 -D neo_neo65_trimode_aliou.bin -R
 
 # --- housekeeping ---------------------------------------------------------
 

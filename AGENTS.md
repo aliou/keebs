@@ -50,6 +50,54 @@ just neo            # build the NEO65 keymap
 qmk userspace-compile   # build all targets in qmk.json
 ```
 
+## Flashing the NEO65 (WB32FQ95, wb32-dfu bootloader)
+
+The NEO65 tri-mode PCB has no QK_BOOT keycode on stock firmware and Bootmagic's
+plug-in combos (Esc / Space+B) do NOT work -- only the physical-button-less DFU
+entry sequence below does. Candidates tried and rejected: hold B on plug-in,
+hold Esc on plug-in, hold Space+B on plug-in, LShift+RShift+B (Command), Fn+B,
+Fn+Del. None triggered DFU.
+
+The working procedure (matches modokeys Tess65 tri-mode, same WB32+CH582F
+design):
+
+1. Flip the physical battery switch (under the Caps Lock keycap) to OFF.
+2. Unplug USB-C.
+3. Hold Fn+Esc (do NOT release).
+4. Plug in USB-C while holding Fn+Esc; keep holding ~3s after plug-in.
+5. Release. The board enumerates as `WB Device in DFU Mode` (VID:PID
+   `342d:dfa0`).
+
+Check with `wb32-dfu-updater_cli -l`. The board stays in DFU until a successful
+flash+reset.
+
+### Critical: `-t` (toolbox mode)
+
+`wb32-dfu-updater_cli -D <bin> -s 0x08000000 -R` alone silently no-ops (it
+prints `Reset device completed!` but writes nothing -- the WB32's flash read
+protection is enabled by default and blocks the write). You MUST pass `-t`
+(`--toolbox-mode`, which auto-disables read protection) for an actual write:
+
+```
+wb32-dfu-updater_cli -t -s 0x08000000 -D neo_neo65_trimode_aliou.bin -R
+```
+
+A successful write prints `Writing ... OK` and `Download completed!`; a no-op
+prints only `Reset device completed!`. Always re-check with `-l` after.
+
+`just neo-flash` does the right thing. (Battery switch + Fn+Esc entry must be
+done manually; there is no software trigger for it.)
+
+### Pairing survives firmware swaps
+
+BT pairings live in the CH582F radio's own flash, not the WB32's. So re-flashing
+the WB32 over USB does not lose paired hosts. After flashing, the board starts
+on USB mode; switch with Fn+Tab (`KC_NXT`) until the target LED slow-blanks,
+then tap (select) or hold 3s (pair) Fn+Q/W/E/R for BT1/BT2/BT3/2.4G.
+
+The ergonomics summary (our `aliou` keymap): Fn is immediately right of
+Space, NOT one key further right like stock.
+
 ## Committing code
 
 - Check the status with `git status` before committing; only stage files
