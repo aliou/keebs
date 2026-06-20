@@ -25,6 +25,10 @@ mirage:
 mirage-flash:
     qmk flash -kb mode/m256wh -km mirage
 
+# Compile, wait for DFU, and flash Mirage automatically.
+mirage-flash-auto:
+    ./bin/flash-mirage.nu
+
 neo:
     qmk compile -kb neo/neo65_trimode -km aliou
 
@@ -35,13 +39,17 @@ neo:
 # Stock firmware binds no QK_BOOT, and Bootmagic plug-in combos (Esc /
 # Space+B) do NOT enter DFU on this board -- only the Fn+Esc+physical-switch
 # sequence above does. The CH582F radio must be unpowered (battery off) at
-# entry or the WB32 won't jump to the bootloader.
+# entry or the WB32 won't jump to its bootloader.
 #
 # `-t` (toolbox mode) is critical: without it, the WB32's default flash read
 # protection blocks the write and the tool silently no-ops (prints only
 # "Reset device completed!" with no "Writing ... OK").
 neo-flash:
     wb32-dfu-updater_cli -t -s 0x08000000 -D neo_neo65_trimode_aliou.bin -R
+
+# Compile, wait for DFU, and flash NEO65 automatically.
+neo-flash-auto:
+    ./bin/flash-neo.nu
 
 # --- housekeeping ---------------------------------------------------------
 
