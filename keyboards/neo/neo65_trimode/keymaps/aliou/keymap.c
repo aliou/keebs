@@ -2,20 +2,20 @@
 //
 // Base layer mirrors my Mode Mirage layout: grave on the top-left key,
 // LCTL_T(KC_ESC) modtap on the caps position, eager per-row debounce.
-// The FN layer adds the wireless device-switch keys (USB/BT1/BT2/BT3/2.4G)
-// at the Tab/Q/W/E/R positions and reset (QK_BOOT) on the B key -- same
-// convention as the Mirage (hold B to enter DFU).
+//
+// FN layer is minimal: Fn+Tab cycles wireless device (USB -> BT1 -> ... ->
+// 2.4G -> USB, see keyboards/neo/neo65_trimode/neo65_trimode.c
+// process_record_kb KC_NXT), and Fn+B enters DFU. F-keys + nav cluster are
+// the only other non-transparent bits.
+//
+// BT pairings live in the CH582F radio's own flash, so they survive a WB32
+// firmware swap. Cycle with Fn+Tab once after flashing and the existing BT1
+// pairing reconnects automatically.
 
 #include QMK_KEYBOARD_H
 
 // Tap for ESC, hold for CTRL.
 #define CTL_ESC LCTL_T(KC_ESC)
-
-// Tapping a device key selects it; holding it for >= WIRELESS_TAPPING_TERM
-// (3 s, see keyboards/neo/neo65_trimode/config.h) enters pairing mode.
-// LT(0, ...) is the wrapper edthu's wireless module uses to expose the
-// hold-to-pair behavior.
-#define BT_SEL(kc) LT(0, kc)
 
 const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
   // ── base ──────────────────────────────────────────────────────────────
@@ -30,16 +30,15 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
   ),
 
   // ── FN ────────────────────────────────────────────────────────────────
-  // Wireless device select on Tab/Q/W/E/R (tap = select, hold 3s = pair),
-  // F-keys, reset on B, media on the nav cluster, and the same QK_BOOT on
-  // the grave/esc key as the Mirage, matching the "hold to flash" muscle
-  // memory.
+  // Fn+Tab = cycle wireless device (USB <-> BT1, since that's all I pair).
+  // Fn+B   = QK_BOOT (enter WB32 DFU).
+  // Everything else falls through (F-keys + nav/media only).
   [1] = LAYOUT(
-      QK_BOOT,  KC_F1,   KC_F2,   KC_F3,   KC_F4,   KC_F5,   KC_F6,   KC_F7,   KC_F8,   KC_F9,   KC_F10,  KC_F11,  KC_F12,  _______, KC_DEL,  KC_MUTE,
-      KC_USB,   BT_SEL(KC_BT1), BT_SEL(KC_BT2), BT_SEL(KC_BT3), BT_SEL(KC_2G4), _______, _______, _______, _______, _______, _______, _______, _______, _______,          KC_VOLU,
-      _______,  _______, _______, _______, _______, _______, _______, _______, _______, _______, _______, _______, _______, _______,          KC_VOLD,
-      _______,  _______, _______, _______, _______, _______, QK_BOOT, _______, _______, _______, _______, _______,          _______, _______, KC_MPLY,
-      _______,  _______, _______,                            _______,                           _______, _______,          _______, _______, _______
+      _______, KC_F1,   KC_F2,   KC_F3,   KC_F4,   KC_F5,   KC_F6,   KC_F7,   KC_F8,   KC_F9,   KC_F10,  KC_F11,  KC_F12,  _______, KC_DEL,  KC_MUTE,
+      KC_NXT,  _______, _______, _______, _______, _______, _______, _______, _______, _______, _______, _______, _______, _______,          KC_VOLU,
+      _______, _______, _______, _______, _______, _______, _______, _______, _______, _______, _______, _______, _______, _______,          KC_VOLD,
+      _______, _______, _______, _______, _______, _______, QK_BOOT, _______, _______, _______, _______, _______,          _______, _______, KC_MPLY,
+      _______, _______, _______,                            _______,                           _______, _______,          _______, _______, _______
   )
 };
 
