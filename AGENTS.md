@@ -27,8 +27,6 @@ Nothing forks the firmware or grows a submodule.
 - `vendor/edthu-wireless/` -- source for patch 0002. Regenerate the patch
   with `scripts/regen-wireless-patch.sh` (resolves pristine firmware via
   `nix build .#qmkFirmwareSrc`, overlays vendored files, emits the patch).
-- `vendor/qwertykeys-firmware/` -- official stock firmware binaries, kept as
-  recovery/ref baseline.
 
 Environment is pinned to `$PWD`; nothing lives in `~/.config/qmk` or
 `~/Library/Application Support/qmk`. The flake devShell (via direnv) sets
