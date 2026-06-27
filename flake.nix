@@ -86,6 +86,8 @@
             wb32-dfu-updater          # WB32 DFU flash (NEO65) -> wb32-dfu-updater_cli
             gnumake                   # build driver
             python3                   # some qmk subcommands need it
+            nodejs                    # tools/keyboard-tester (Vite dev server)
+            pnpm                      # tools/keyboard-tester package manager
           ];
 
           shellHook = ''
@@ -97,6 +99,7 @@
             echo ""
             echo "  build all:  qmk userspace-compile"
             echo "  example:    qmk compile -kb mode/m256wh -km mirage"
+            echo "  tester:    (cd tools/keyboard-tester && pnpm dev)"
             echo ""
 
             export QMK_HOME="${qmkFirmware}"

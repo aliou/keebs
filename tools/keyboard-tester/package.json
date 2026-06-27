@@ -1,0 +1,35 @@
+{
+  "name": "@aliou/keebs-keyboard-tester",
+  "version": "0.1.0",
+  "private": true,
+  "description": "Local keyboard tester for the CannonKeys DB60 (Bakeneko) milky_neko keymap. Highlights each physical switch as it is pressed so you can rebuild a keyboard switch by switch.",
+  "type": "module",
+  "scripts": {
+    "dev": "vite",
+    "build": "tsc --noEmit && vite build",
+    "preview": "vite preview",
+    "check": "biome check .",
+    "lint": "biome lint .",
+    "format": "biome check --write .",
+    "typecheck": "tsc --noEmit"
+  },
+  "engines": {
+    "node": ">=22"
+  },
+  "devDependencies": {
+    "@aliou/biome-plugins": "^0.10.0",
+    "@biomejs/biome": "^2.5.1",
+    "@tailwindcss/vite": "^4.3.1",
+    "@types/react": "^19.2.0",
+    "@types/react-dom": "^19.2.0",
+    "@vitejs/plugin-react": "^6.0.3",
+    "tailwindcss": "^4.3.1",
+    "typescript": "^6.0.3",
+    "vite": "^8.1.0"
+  },
+  "dependencies": {
+    "react": "^19.2.7",
+    "react-dom": "^19.2.7"
+  },
+  "packageManager": "pnpm@10.33.4"
+}
