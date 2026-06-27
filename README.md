@@ -17,6 +17,7 @@ Everything is reproducible and self-contained to this directory:
 |---|---|---|---|
 | Mode Mirage (M256W-H) | STM32F401 | stm32-dfu | `mode/m256wh:mirage` |
 | NEO65 tri-mode | WB32FQ95 + CH582F | wb32-dfu | `neo/neo65_trimode:aliou` |
+| CannonKeys Bakeneko (DB60 hotswap) | STM32F072 | stm32-dfu | `cannonkeys/db60/hotswap:milky_neko` |
 
 
 The NEO65 is not in upstream QMK. Its tri-mode support (WB32 main MCU talking
@@ -74,6 +75,25 @@ any warning that surfaces during a build is real).
    ```
    just mirage-flash
    # or: qmk flash -kb mode/m256wh -km mirage
+   ```
+
+### Bakeneko (CannonKeys DB60 hotswap) -- STM32 DFU
+
+1. Enter DFU. Two ways, neither needs the keymap running:
+   - **Back toggle switch (keycap-free):** unplug, flip the small switch on the
+     back of the PCB from `0` to `1`, plug back in. That ties `BOOT0` to VCC,
+     so the STM32F072 boots straight into its factory DFU ROM bootloader --
+     enumerates as `0483:df11` with no firmware/keycaps involved.
+   - **With the `milky_neko` build running** (keycaps on): hold `MO(1)`
+     (bottom row, right of Space) and hold `B` for ~500ms. That key is the
+     `MN_DFU` custom keycode, which calls `reset_keyboard()`.
+   - (Bootmagic Lite is also enabled, so holding the top-left key on plug-in
+     jumps to the bootloader too -- needs a switch there.)
+2. Confirm: `dfu-util -l` shows `Found DFU: [0483:df11]`.
+3. Flash:
+   ```
+   just bakeneko-flash
+   # or: qmk flash -kb cannonkeys/db60/hotswap -km milky_neko
    ```
 
 ### NEO65 -- WB32 DFU
@@ -142,7 +162,6 @@ build targets:
 
 | Keyboard | MCU | Bootloader | Build target |
 |---|---|---|---|
-| CannonKeys DB60 hotswap (Milky Neko) | STM32F303 | stm32-dfu | `cannonkeys/db60/hotswap:milky_neko` |
 | DZTech DZ60RGB v2.1 (Silent Tofu) | STM32F303 | stm32-dfu | `dztech/dz60rgb/v2_1:silent_tofu` |
 
 ## Notable config: eager debounce

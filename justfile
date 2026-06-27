@@ -29,6 +29,19 @@ mirage-flash:
 mirage-flash-auto:
     ./bin/flash-mirage.nu
 
+bakeneko:
+    qmk compile -kb cannonkeys/db60/hotswap -km milky_neko
+
+# Flash the Bakeneko (CannonKeys DB60 hotswap, STM32F072). Enter DFU first:
+# hold MO(1) + B for ~500ms -- the MN_DFU keycode calls reset_keyboard().
+# STM32 DFU over USB; uses dfu-util.
+bakeneko-flash:
+    qmk flash -kb cannonkeys/db60/hotswap -km milky_neko
+
+# Compile, wait for DFU, and flash the Bakeneko automatically.
+bakeneko-flash-auto:
+    ./bin/flash-bakeneko.nu
+
 neo:
     qmk compile -kb neo/neo65_trimode -km aliou
 
