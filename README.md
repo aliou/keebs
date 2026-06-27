@@ -36,7 +36,8 @@ keyboards/       -- our overlay. Keymaps at keyboards/<vendor>/<kb>/keymaps/<km>
 patches/         -- 0001: read-only tolerance. 0002: edthu wireless (NEO65).
 vendor/          -- edthu-wireless source (regen base) + stock qwertykeys binaries.
 scripts/         -- regen-wireless-patch.sh, ble-scan.swift/.py.
-justfile         -- `just mirage`, `just neo`, `just all`, `just mirage-flash`, ...
+justfile         -- `just mirage`, `just neo`, `just bakeneko`, `just all`, ...
+tools/keyboard-tester/  -- local switch-tester web app for rebuilding hotswap boards.
 ```
 
 ## First run
@@ -54,6 +55,7 @@ Without direnv: `nix develop`.
 ```
 just mirage         # build the Mirage keymap
 just neo            # build the NEO65 aliou keymap
+just bakeneko       # build the Bakeneko milky_neko keymap
 just all            # build every target in qmk.json
 qmk compile -kb mode/m256wh -km mirage   # direct
 ```
@@ -92,6 +94,7 @@ any warning that surfaces during a build is real).
 2. Confirm: `dfu-util -l` shows `Found DFU: [0483:df11]`.
 3. Flash:
    ```
+   just bakeneko-flash-auto   # compile + wait for DFU + flash
    just bakeneko-flash
    # or: qmk flash -kb cannonkeys/db60/hotswap -km milky_neko
    ```
@@ -181,3 +184,17 @@ Eager debounce reports the press immediately and only reverts if noise is
 detected within `DEBOUNCE` ms. Measured on the Mirage: 7.4ms -> ~0.04ms.
 Combined with `HOLD_ON_OTHER_KEY_PRESS`, rolled Ctrl+key combos send `<C-key>`
 instead of `<Esc-key>`.
+
+### macOS Fn / Globe double-tap (`CTL_DBL_FN`)
+
+Every active keymap (Mirage, NEO65, DB60) maps the bottom-left physical key
+(normally `KC_LCTL`) to a custom `CTL_DBL_FN` keycode. It behaves as a normal
+left Control when held or chorded, but a clean double-tap inside a 250ms
+window sends the macOS Fn/Globe shortcut twice (`AC_NEXT_KEYBOARD_LAYOUT_SELECT`
+twice via the consumer page), which opens the input-source picker.
+
+If any other key is pressed while `CTL_DBL_FN` is held, the keycode marks the
+press as a chord and cancels the pending double-tap, so normal Ctrl use never
+misfires the Globe shortcut. The timing and behavior are identical across all
+three boards so the gesture feels the same no matter which keyboard is plugged
+in.

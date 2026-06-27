@@ -27,6 +27,10 @@ Nothing forks the firmware or grows a submodule.
 - `vendor/edthu-wireless/` -- source for patch 0002. Regenerate the patch
   with `scripts/regen-wireless-patch.sh` (resolves pristine firmware via
   `nix build .#qmkFirmwareSrc`, overlays vendored files, emits the patch).
+- `OV_TRIGGER` -- custom keycode used on every active keymap. It replaces
+  the physical FN key's `MO()` so the host can see an inert F-key while FN
+  is held (F13 = DB60, F14 = Mirage, F15 = NEO65). See
+  `docs/2026-06-27-fn-trigger-overlay/README.md` for the contract.
 
 Environment is pinned to `$PWD`; nothing lives in `~/.config/qmk` or
 `~/Library/Application Support/qmk`. The flake devShell (via direnv) sets
@@ -37,6 +41,7 @@ Environment is pinned to `$PWD`; nothing lives in `~/.config/qmk` or
 ```
 just mirage                 # mode/m256wh:mirage
 just neo                    # neo/neo65_trimode:aliou
+just bakeneko               # cannonkeys/db60/hotswap:milky_neko
 just all                    # all targets in qmk.json (qmk userspace-compile)
 qmk compile -kb mode/m256wh -km mirage   # direct
 ```
@@ -61,6 +66,23 @@ Or, if you prefer to do it manually:
 
 ```
 just mirage-flash          # qmk flash -kb mode/m256wh -km mirage
+```
+
+### Bakeneko (CannonKeys DB60 hotswap, STM32F072)
+
+Enter DFU:
+- With the keycaps off: unplug, flip the small toggle switch on the back of
+  the PCB from `0` to `1`, then plug back in. This ties BOOT0 high and boots
+  the STM32F072 straight into its factory DFU ROM bootloader.
+- With the `milky_neko` build running: hold `MO(1)` (bottom row, right of Space)
+  and hold `B` for ~500ms. That position is the `MN_DFU` custom keycode, which
+  calls `reset_keyboard()`.
+
+Then flash:
+
+```
+just bakeneko-flash-auto   # compile + wait for DFU + flash
+just bakeneko-flash        # qmk flash -kb cannonkeys/db60/hotswap -km milky_neko
 ```
 
 ### NEO65 (WB32FQ95 + CH582F, wb32-dfu)
@@ -102,6 +124,29 @@ prematurely without writing. `-t -s 0x08000000 -D <bin>` (with optional
 Pairings live in the CH582F radio's own flash, not the WB32's. Reflashing
 the WB32 over USB does not lose paired hosts. After flashing, `Fn+Tab` to
 BT1 in the `aliou` keymap (custom `USB_BT1_TOG` keycode) and it reconnects.
+
+## Tools
+
+### Keyboard tester (`tools/keyboard-tester/`)
+
+Local-only Vite + React + TypeScript + Tailwind app for rebuilding hotswap
+boards switch by switch. Pick a board, press a switch, and the matching
+physical position lights up. Supports DB60, Mirage, and NEO65 layouts.
+
+Requires the parent devShell (it provides `nodejs` and `pnpm`):
+
+```
+cd tools/keyboard-tester
+pnpm install        # first time only
+pnpm dev            # http://127.0.0.1:5173
+pnpm check          # biome lint/format/grit plugins
+pnpm typecheck      # tsc --noEmit
+pnpm build          # outputs dist/
+```
+
+The geometry and labels are hand-maintained in `src/keyboards.ts`; update
+that file whenever a keymap changes. See `tools/keyboard-tester/AGENTS.md`
+for the sub-project conventions.
 
 ## Committing code
 

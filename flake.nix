@@ -14,7 +14,7 @@
 # Build all targets (qmk.json):  qmk userspace-compile
 # Flash Mirage:                  qmk flash -kb mode/m256wh -km mirage
 #   (put board in DFU: hold MO(1)+grave, or hold MO(1)+B)
-# Flash NEO65:                   qmk flash -kb neo/neo65_trimode -km default
+# Flash NEO65:                   qmk flash -kb neo/neo65_trimode -km aliou
 #   (put board in DFU: hold B while plugging in -- WB32 DFU, use
 #    wb32-dfu-updater_cli, NOT dfu-util; see justfile)
 {
