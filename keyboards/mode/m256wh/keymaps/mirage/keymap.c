@@ -6,8 +6,16 @@
 // Double-tap window for the bottom-left Ctrl -> macOS Fn/Globe shortcut.
 #define MAC_FN_DOUBLE_TAP_TERM 250
 
+// OV_TRIGGER: the physical FN key switches to layer 1 AND emits an inert
+// host-visible F-key (F14) for the duration it's held. Hammerspoon watches
+// F14 keydown/keyup to show this board's FN-layer cheat sheet. Each board
+// uses a distinct F-key so the overlay knows which keyboard acted.
+// Manual layer_on/layer_off reproduces MO(); media/F-row/DFU untouched.
+#define OV_FN_KEY KC_F14
+
 enum custom_keycodes {
     CTL_DBL_FN = SAFE_RANGE,
+    OV_TRIGGER,
 };
 
 static uint16_t ctl_dbl_fn_timer;
@@ -53,6 +61,16 @@ bool process_record_user(uint16_t keycode, keyrecord_t *record) {
                 ctl_dbl_fn_second_tap = false;
             }
             return false;
+
+        case OV_TRIGGER:
+            if (record->event.pressed) {
+                layer_on(1);
+                register_code16(OV_FN_KEY);
+            } else {
+                unregister_code16(OV_FN_KEY);
+                layer_off(1);
+            }
+            return false;
     }
 
     if (ctl_dbl_fn_down && record->event.pressed) {
@@ -68,7 +86,7 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
       KC_TAB ,  KC_Q   , KC_W   , KC_E   , KC_R   , KC_T   , KC_Y   , KC_U   , KC_I   , KC_O   , KC_P   , KC_LBRC, KC_RBRC, KC_BSLS, KC_PGUP,
       CTL_ESC,  KC_A   , KC_S   , KC_D   , KC_F   , KC_G   , KC_H   , KC_J   , KC_K   , KC_L   , KC_SCLN, KC_QUOT, KC_ENT , KC_PGDN,
       KC_LSFT,  KC_Z   , KC_X   , KC_C   , KC_V   , KC_B   , KC_N   , KC_M   , KC_COMM, KC_DOT , KC_SLSH, KC_RSFT, KC_UP  , KC_END ,
-      CTL_DBL_FN, KC_LALT, KC_LGUI,                          KC_SPC ,                   MO(1)  , KC_RGUI, KC_LEFT, KC_DOWN, KC_RGHT
+      CTL_DBL_FN, KC_LALT, KC_LGUI,                          KC_SPC ,                   OV_TRIGGER, KC_RGUI, KC_LEFT, KC_DOWN, KC_RGHT
   ),
   [1] = LAYOUT(
       QK_BOOT,  KC_F1  , KC_F2  , KC_F3  , KC_F4  , KC_F5  , KC_F6  , KC_F7  , KC_F8  , KC_F9  , KC_F10 , KC_F11 , KC_F12 , KC_DEL , KC_MUTE,

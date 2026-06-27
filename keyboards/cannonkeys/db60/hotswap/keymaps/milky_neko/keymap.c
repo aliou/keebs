@@ -6,8 +6,19 @@ enum layer_names {
 };
 
 // Prefix custom keycodes by `MN` to prevent colisions.
-enum alt_keycodes {
-  MN_DFU = SAFE_RANGE
+// Overlay trigger: the physical FN key switches to layer _FN1 AND emits an inert
+// host-visible F-key (F13) for the duration it's held. Hammerspoon watches for
+// F13 keydown/keyup to show the per-board FN-layer cheat sheet. One distinct
+// F-key per board, so the overlay knows which keyboard acted.
+//
+// Replaces MO(_FN1) at the FN position. Manual layer_on/layer_off preserves
+// the exact MO() momentary-layer semantics; all other FN-layer bindings
+// (arrows, DFU, media) are untouched.
+#define OV_FN_KEY KC_F13
+
+enum custom_keycodes {
+  MN_DFU = SAFE_RANGE,
+  OV_TRIGGER,
 };
 
 // Tap for ESC, hold for CTRL.
@@ -23,7 +34,7 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
     KC_TAB,   KC_Q,    KC_W,    KC_E,    KC_R,    KC_T,    KC_Y,   KC_U,    KC_I,    KC_O,    KC_P,     KC_LBRC, KC_RBRC, KC_BSLS,
     CTL_ESC,  KC_A,    KC_S,    KC_D,    KC_F,    KC_G,    KC_H,   KC_J,    KC_K,    KC_L,    KC_SCLN,  KC_QUOT,          KC_ENT,
     KC_LSFT,  KC_Z,    KC_X,    KC_C,    KC_V,    KC_B,    KC_N,   KC_M,    KC_COMM, KC_DOT,  KC_SLSH,                    KC_RSFT,
-    KC_LCTL,  KC_LALT, KC_LGUI,                            KC_SPC,                            MO(_FN1), KC_RGUI, KC_RALT, KC_RCTL
+    KC_LCTL,  KC_LALT, KC_LGUI,                            KC_SPC,                            OV_TRIGGER, KC_RGUI, KC_RALT, KC_RCTL
   ),
 
   // WASD for arrow keys + B for DFU mode + bottom right keys for arrow keys.
@@ -51,10 +62,21 @@ bool process_record_user(uint16_t keycode, keyrecord_t *record) {
       }
       return false;
 
-    // Process all other keycodes normally.
+    case OV_TRIGGER:
+      if (record->event.pressed) {
+        layer_on(_FN1);
+        register_code16(OV_FN_KEY);
+      } else {
+        unregister_code16(OV_FN_KEY);
+        layer_off(_FN1);
+      }
+      return false;
+
     default:
       return true;
   }
+
+  return true;
 }
 
 // vim:foldmethod=syntax tw=0 shiftwidth=2
