@@ -130,4 +130,74 @@ bool process_record_user(uint16_t keycode, keyrecord_t *record) {
   return true;
 }
 
+// ---------------------------------------------------------------------------
+// Underglow: the DB60 spec wire supports a 20-LED WS2812 chain (pin B15, SPI)
+// per info.json. Retail Bakeneko60 hotswap PCBs ship without LEDs populated,
+// so if this unit has none these calls are no-ops -- but if the strip is there,
+// this drives it manually instead of the built-in animation engine:
+//
+//   base (_BASE): a single LED (chain index 0) cycling hue endlessly. Board
+//                  is alive" pulse; everything else off.
+//   FN   (_FN1):   all LEDs red. The FN layer holds the DFU keys (MN_DFU on B,
+//                  QK_BOOT-style hold on grave was never bound here), so red
+//                  flags the dangerous layer the moment you hold FN -- the
+//                  closest the hardware allows to "DFU keys glow red."
+//
+// Per-key highlighting (green arrows, blue media) is NOT possible here: the
+// DB60 has no per-key addressable RGB, only this downward-facing underglow
+// strip. We set RGBLIGHT_MODE_STATIC_LIGHT so the timer task runs the no-op
+// rgblight_effect_dummy and our manual writes persist. Matches the Mirage.
+// ---------------------------------------------------------------------------
+
+#define MN_LED_COUNT 20
+
+#define MN_VAL_BASE 255 // single LED pulse
+#define MN_VAL_FN   255 // red flood
+
+static uint8_t  mn_hue      = 0;
+static uint16_t mn_last     = 0;
+static uint8_t  mn_prev_top = 0xFF;
+
+static void mn_render(uint8_t top_layer) {
+  if (top_layer == _FN1) {
+    // FN/DFU layer: flood red to flag the dangerous layer.
+    rgblight_setrgb(MN_VAL_FN, 0, 0);
+  } else {
+    // Base layer: everything off, then light only the first LED with the
+    // current cycling hue (a heartbeat; this is the alive test).
+    rgblight_setrgb(0, 0, 0);
+    rgb_t c = hsv_to_rgb((hsv_t){mn_hue, 255, MN_VAL_BASE});
+    rgblight_setrgb_at(c.r, c.g, c.b, 0);
+  }
+}
+
+void keyboard_post_init_user(void) {
+  // No animation engine -- we drive the strip directly.
+  rgblight_enable_noeeprom();
+  rgblight_mode_noeeprom(RGBLIGHT_MODE_STATIC_LIGHT);
+  mn_prev_top = get_highest_layer(layer_state | default_layer_state);
+  mn_render(mn_prev_top);
+}
+
+void housekeeping_task_user(void) {
+  uint8_t top = get_highest_layer(layer_state | default_layer_state);
+
+  // Redraw immediately on a layer change, otherwise advance the hue / repaint
+  // at ~30 fps to keep the single-LED rainbow smooth without flooding the
+  // WS2812 bus every loop iteration.
+  if (top != mn_prev_top) {
+    mn_render(top);
+    mn_prev_top = top;
+    return;
+  }
+
+  if (timer_elapsed(mn_last) > 33) {
+    mn_last = timer_read();
+    if (top == _BASE) {
+      mn_hue += 8; // wraps uint8_t -> endless color cycle
+      mn_render(top);
+    }
+  }
+}
+
 // vim:foldmethod=syntax tw=0 shiftwidth=2
