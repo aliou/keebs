@@ -148,6 +148,29 @@ The geometry and labels are hand-maintained in `src/keyboards.ts`; update
 that file whenever a keymap changes. See `tools/keyboard-tester/AGENTS.md`
 for the sub-project conventions.
 
+### Latency tracer (`tools/keyboard-latency-tracer/`)
+
+Tiny macOS CGEventTap used to measure the gap between a mod-tap Control
+modifier going down and the next key going down. It was built to confirm the
+Mirage's `LCTL_T(KC_ESC)` felt sluggish on `Ctrl + anything` and to verify
+that switching to eager per-row debounce fixed it. It only observes events;
+it does not inject or swallow them.
+
+Build requires Xcode command line tools:
+
+```
+cd tools/keyboard-latency-tracer
+make
+./tracer
+```
+
+The first run will request **Input Monitoring** permission for the terminal
+app in System Settings. Stop the tracer with a bare `q`, 10 seconds of idle,
+or `pkill tracer`.
+
+See `docs/2026-06-19-keyboard-latency-investigation/README.md` for the
+measurement findings and the debounce fix.
+
 ## Committing code
 
 - `git status` first; stage only files relevant to the change. Avoid

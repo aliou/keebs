@@ -37,7 +37,8 @@ patches/         -- 0001: read-only tolerance. 0002: edthu wireless (NEO65).
 vendor/          -- edthu-wireless source (regen base) + stock qwertykeys binaries.
 scripts/         -- regen-wireless-patch.sh, ble-scan.swift/.py.
 justfile         -- `just mirage`, `just neo`, `just bakeneko`, `just all`, ...
-tools/keyboard-tester/  -- local switch-tester web app for rebuilding hotswap boards.
+tools/keyboard-tester/          -- local switch-tester web app for rebuilding hotswap boards.
+tools/keyboard-latency-tracer/  -- macOS CGEventTap to measure QMK modtap latency.
 ```
 
 ## First run
@@ -184,6 +185,10 @@ Eager debounce reports the press immediately and only reverts if noise is
 detected within `DEBOUNCE` ms. Measured on the Mirage: 7.4ms -> ~0.04ms.
 Combined with `HOLD_ON_OTHER_KEY_PRESS`, rolled Ctrl+key combos send `<C-key>`
 instead of `<Esc-key>`.
+
+The latency was measured with `tools/keyboard-latency-tracer/`, a small macOS
+CGEventTap that prints every OS-level key event with high-resolution
+timestamps. See that directory's README and `docs/2026-06-19-keyboard-latency-investigation/README.md`.
 
 ### macOS Fn / Globe double-tap (`CTL_DBL_FN`)
 

@@ -4,6 +4,7 @@ Dated decision/operation records and architecture notes for the keebs repo.
 
 | Date | Topic | File |
 |---|---|---|
+| 2026-06-19 | Keyboard modtap latency investigation | `2026-06-19-keyboard-latency-investigation/README.md` |
 | 2026-06-20 | Archiving retired keymaps | `2026-06-20-archive-keyboards/README.md` |
 | 2026-06-20 | edthu wireless vendoring + NEO65 tri-mode support | `2026-06-20-edthu-wireless-neo65/README.md` |
 | 2026-06-20 | Auto-flash Nushell scripts + DFU polling | `2026-06-20-auto-flash-scripts/README.md` |
