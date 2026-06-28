@@ -11,6 +11,6 @@ Dated decision/operation records and architecture notes for the keebs repo.
 | 2026-06-26 | macOS Fn / Globe double-tap custom keycode (`CTL_DBL_FN`) | `2026-06-26-mac-fn-globe-double-tap/README.md` |
 | 2026-06-27 | CannonKeys Bakeneko (DB60) revival | `2026-06-27-bakeneko-revival/README.md` |
 | 2026-06-27 | Keyboard tester web app | `2026-06-27-keyboard-tester/README.md` |
-| 2026-06-27 | Host-visible FN-layer overlay trigger (`OV_TRIGGER`) | `2026-06-27-fn-trigger-overlay/README.md` |
+| 2026-06-27 | Host-visible FN-layer overlay trigger (`OV_TRIGGER`) (reverted) | `2026-06-27-fn-trigger-overlay/README.md` |
 
 For day-to-day commands and conventions, see the root `README.md` and `AGENTS.md`.

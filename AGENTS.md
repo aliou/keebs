@@ -27,10 +27,6 @@ Nothing forks the firmware or grows a submodule.
 - `vendor/edthu-wireless/` -- source for patch 0002. Regenerate the patch
   with `scripts/regen-wireless-patch.sh` (resolves pristine firmware via
   `nix build .#qmkFirmwareSrc`, overlays vendored files, emits the patch).
-- `OV_TRIGGER` -- custom keycode used on every active keymap. It replaces
-  the physical FN key's `MO()` so the host can see an inert F-key while FN
-  is held (F13 = DB60, F14 = Mirage, F15 = NEO65). See
-  `docs/2026-06-27-fn-trigger-overlay/README.md` for the contract.
 
 Environment is pinned to `$PWD`; nothing lives in `~/.config/qmk` or
 `~/Library/Application Support/qmk`. The flake devShell (via direnv) sets

@@ -34,7 +34,7 @@ bin/qmk          -- wrapper: injects BUILD_DIR=$PWD/.build + SKIP_GIT=1.
 keyboards/       -- our overlay. Keymaps at keyboards/<vendor>/<kb>/keymaps/<km>/.
                    _archive/ holds retired keymaps (no longer in qmk.json).
 patches/         -- 0001: read-only tolerance. 0002: edthu wireless (NEO65).
-vendor/          -- edthu-wireless source (regen base) + stock qwertykeys binaries.
+vendor/          -- edthu-wireless source (regen base for patch 0002).
 scripts/         -- regen-wireless-patch.sh, ble-scan.swift/.py.
 justfile         -- `just mirage`, `just neo`, `just bakeneko`, `just all`, ...
 tools/keyboard-tester/          -- local switch-tester web app for rebuilding hotswap boards.
