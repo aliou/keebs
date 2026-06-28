@@ -1,5 +1,12 @@
 # FN key emits a host-visible overlay trigger
 
+> **Status: REVERTED.** This change was rolled back (see the matching
+> `revert: drop host-visible FN trigger F-key from keymaps` commit) after
+> F13 collided with an existing host binding and the conflict-free trigger
+> approach could not be agreed. The keymaps are back to a plain `MO()` FN
+> key with no host-visible emission. This doc is kept as a historical record
+> of the design and the reason it did not ship; do not treat it as current.
+
 Dated: 2026-06-27
 
 ## Background
